@@ -1,3 +1,5 @@
+exec = require('child_process').exec
+
 WHITE_LIST = [
   'Shell',  # Needed for development 
   'rolf',
@@ -11,23 +13,21 @@ module.exports = (robot) ->
     else
       res.reply "You are not allowed to deploy"
 
-  robot.respond /deploy project (\w+)( \w+)?/i, (res) ->
+  robot.respond /deploy django(?::(\w+))? *(\w+)?/i, (res) ->
     if res.message.user.name in WHITE_LIST
-      deploy(res, res.match[1])
+      deploy_django(res, res.match[1], res.match[2])
     else
       res.reply "You are not allowed to deploy"
 
-do_command = (res, command) ->
-  @exec = require('child_process').exec
-
-  @exec command, (error, stdout, stderr) ->
-    res.send "doing " + command
+do_command = (res, command, success= -> 'Consider it done!') ->
+  exec command, (error, stdout, stderr) ->
+    #res.send "doing " + command
     res.send error if error
     res.send stderr if stderr
     #res.send stdout if stdout
 
-    if !stderr or ! error
-      res.reply 'Consider it done!'
+    if !stderr and ! error
+      res.reply success()
 
 deploy_puppet = (res, branch, node) ->
   if node == undefined 
@@ -37,11 +37,16 @@ deploy_puppet = (res, branch, node) ->
     res.send 'Deploying puppet to ' + node
 
   if branch == undefined
-    do_command(res, 'fab node:' + node + ' deploy')
+    do_command(res, 'fab node:' + node + ' deploy_puppet')
   else
-    do_command(res, 'fab node:' + node + ' deploy:' + branch)
+    do_command(res, 'fab node:' + node + ' deploy_puppet:' + branch)
   
-deploy = (res, project) ->
-  #FIXME, Implement this
-  res.send "Not implemented yet"
+deploy_django = (res, branch, node) ->
+  node = node or 'luke'
+  branch = branch or 'master'
+
+  res.send 'Deploying ' + branch + ' to ' + node + '...'
+  do_command(res, 'fab node:' + node + ' deploy_django:nerd,' + branch, ->
+    'All done! ' + branch + ' was successfully deployed to ' + node
+  )
 

@@ -6,14 +6,25 @@ env.user = 'root'
 
 
 @task
-def deploy(branch='master'):
+def deploy_puppet(branch='master'):
     """
-    Usage fab deploy:<branch>
+    Usage fab deploy_puppet:<branch>
     """
     with cd('/puppet/'):
         run('git fetch && git reset --hard origin/%s' % branch)
         run('puppet apply manifests/site.pp')
 
+@task
+def deploy_django(project='nerd', branch='master'):
+    """
+    fab deploy_django:<branch>
+    """
+    env.user = 'webkom'
+    with cd('/home/webkom/webapps/%s/' % project):
+        run('git fetch && git reset --hard origin/%s' % branch)
+        run('venv/bin/pip install -r requirements.txt')
+        run('venv/bin/python manage.py syncdb --noinput --migrate')
+        run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
 
 @task
 def node(name):
