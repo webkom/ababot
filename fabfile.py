@@ -11,9 +11,8 @@ def deploy(branch='master'):
     Usage fab deploy:<branch>
     """
     with cd('/puppet/'):
-        #run('git fetch && git reset --hard origin/%s' % branch)
-        #run('puppet apply manifests/site.pp')
-        run('echo "yeah"')
+        run('git fetch && git reset --hard origin/%s' % branch)
+        run('puppet apply manifests/site.pp')
 
 
 @task
