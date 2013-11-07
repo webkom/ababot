@@ -1,1 +1,7 @@
-["redis-brain.coffee", "shipit.coffee"]
+[
+  "redis-brain.coffee",
+  "shipit.coffee",
+  "ascii.coffee",
+  "newrelic.coffee",
+  "deploy.coffee"
+]
