@@ -1,3 +1,11 @@
+# Description:
+#   Deploy scripts for ababot 
+#
+# Commands:
+# hubot deploy puppet <node> - deploys master to <node> or all if node is not specified 
+# hubot deploy puppet:<branch> <node> - deploys <branch> to <node> or all if node is not specified
+# hubot deploy django - deploy nerd to luke
+
 exec = require('child_process').exec
 
 WHITE_LIST = [
