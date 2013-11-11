@@ -15,9 +15,9 @@ WHITE_LIST = [
 ]
 
 module.exports = (robot) ->
-  robot.respond /deploy puppet(:\w+)?( \w+)?/i, (res) ->
+  robot.respond /deploy puppet(?::(\w+))?(?: (\w+))?/i, (res) ->
     if res.message.user.name in WHITE_LIST
-      deploy_puppet(res, res.match[1], res.match[2].replace(' ', ''))
+      deploy_puppet(res, res.match[1], res.match[2])
     else
       res.reply "You are not allowed to deploy"
 
