@@ -3,5 +3,5 @@
   "shipit.coffee",
   "ascii.coffee",
   "newrelic.coffee",
-  "deploy.coffee"
+  "update.coffee"
 ]
