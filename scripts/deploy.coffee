@@ -21,13 +21,18 @@ module.exports = (robot) ->
 
 do_command = (res, command, success= -> 'Consider it done!') ->
   exec command, (error, stdout, stderr) ->
-    #res.send "doing " + command
     res.send error if error
     res.send stderr if stderr
-    #res.send stdout if stdout
+
+    if stdout
+      for line in stdout.split('\n')
+        res.send line if line.length > 1
 
     if !stderr and ! error
       res.reply success()
+
+fab = (res, command, success) ->
+  do_command(res, 'fab ' + command + ' --hide=stdout,status,running', success)
 
 deploy_puppet = (res, branch, node) ->
   if node == undefined 
@@ -37,16 +42,16 @@ deploy_puppet = (res, branch, node) ->
     res.send 'Deploying puppet to ' + node
 
   if branch == undefined
-    do_command(res, 'fab node:' + node + ' deploy_puppet')
+    fab(res, 'node:' + node + ' deploy_puppet')
   else
-    do_command(res, 'fab node:' + node + ' deploy_puppet:' + branch)
+    fab(res, 'node:' + node + ' deploy_puppet:' + branch)
   
 deploy_django = (res, branch, node) ->
   node = node or 'luke'
   branch = branch or 'master'
 
   res.send 'Deploying ' + branch + ' to ' + node + '...'
-  do_command(res, 'fab node:' + node + ' deploy_django:nerd,' + branch, ->
+  fab(res, 'node:' + node + ' deploy_django:nerd,' + branch, ->
     'All done! ' + branch + ' was successfully deployed to ' + node
   )
 
