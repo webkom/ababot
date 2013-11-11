@@ -25,7 +25,7 @@ def deploy_django(project='nerd', branch='master'):
     env.user = 'webkom'
     with cd('/home/webkom/webapps/%s/' % project):
         
-        old_revision = run('git rev-parse HEAD^^')
+        old_revision = run('git rev-parse HEAD')
         run('git fetch && git reset --hard origin/%s' % branch)
         print list_commits(from_rev=old_revision, to_rev='HEAD')
 
