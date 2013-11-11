@@ -17,6 +17,7 @@ def deploy_puppet(branch='master'):
         run('git fetch && git reset --hard origin/%s' % branch)
         run('puppet apply manifests/site.pp')
 
+
 @task
 def deploy_django(project='nerd', branch='master'):
     """
@@ -24,7 +25,7 @@ def deploy_django(project='nerd', branch='master'):
     """
     env.user = 'webkom'
     with cd('/home/webkom/webapps/%s/' % project):
-        
+
         old_revision = run('git rev-parse HEAD')
         run('git fetch && git reset --hard origin/%s' % branch)
         print list_commits(from_rev=old_revision, to_rev='HEAD')
@@ -32,6 +33,7 @@ def deploy_django(project='nerd', branch='master'):
         run('venv/bin/pip install -r requirements.txt')
         run('venv/bin/python manage.py syncdb --noinput --migrate')
         run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
+
 
 @task
 def node(name):
@@ -47,16 +49,18 @@ def node(name):
     else:
         env.hosts = ['%s.abakus.no' % name]
 
+
 def list_commits(from_rev, to_rev):
     """
     Print a list of all commits made between from_rev and to_rev
     """
 
-    return clean(run("git log %s..%s --no-merges --pretty=format:'%%h %%s (%%an)'" % (from_rev, to_rev)))
+    return clean(run("git log %s..%s --no-merges --pretty=format:'%%h %%s (%%an)'" % (from_rev,
+                                                                                      to_rev)))
+
 
 def clean(content):
     """
     Terminal output can be very creative, somehow, let's remove escape stuff
     """
     return re.sub('[^\n\r]*', '', content).strip()
-
