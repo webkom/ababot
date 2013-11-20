@@ -15,6 +15,7 @@ def deploy_puppet(branch='master'):
     """
     with cd('/puppet/'):
         run('git fetch && git reset --hard origin/%s' % branch)
+        run('librarian-puppet install')
         run('puppet apply manifests/site.pp')
 
 
