@@ -12,6 +12,7 @@ WHITE_LIST = [
   'Shell',  # Needed for development 
   'rolf',
   'haeric',
+  'HansW',
 ]
 
 module.exports = (robot) ->
