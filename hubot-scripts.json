@@ -1,5 +1,4 @@
 [
-  "redis-brain.coffee",
   "shipit.coffee",
   "ascii.coffee",
   "newrelic.coffee",
