@@ -3,5 +3,6 @@
   "shipit.coffee",
   "ascii.coffee",
   "newrelic.coffee",
-  "update.coffee"
+  "update.coffee",
+  "travis.coffee"
 ]
