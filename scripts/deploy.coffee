@@ -13,6 +13,10 @@ WHITE_LIST = [
   'rolf',
   'haeric',
   'HansW',
+  'EirikSyll',
+  'Ek',
+  'danseku',
+  'kristine',
 ]
 
 module.exports = (robot) ->
