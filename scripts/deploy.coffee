@@ -1,15 +1,15 @@
 # Description:
-#   Deploy scripts for ababot 
+#   Deploy scripts for ababot
 #
 # Commands:
-# hubot deploy puppet <node> - deploys master to <node> or all if node is not specified 
+# hubot deploy puppet <node> - deploys master to <node> or all if node is not specified
 # hubot deploy puppet:<branch> <node> - deploys <branch> to <node> or all if node is not specified
 # hubot deploy django - deploy nerd to luke
 
 exec = require('child_process').exec
 
 WHITE_LIST = [
-  'Shell',  # Needed for development 
+  'Shell',  # Needed for development
   'rolf',
   'haeric',
   'HansW',
@@ -17,6 +17,7 @@ WHITE_LIST = [
   'Ek',
   'danseku',
   'kristine',
+  'hanse'
 ]
 
 module.exports = (robot) ->
@@ -48,7 +49,7 @@ fab = (res, command, success) ->
   do_command(res, 'fab ' + command + ' --hide=stdout,status,running', success)
 
 deploy_puppet = (res, branch, node) ->
-  if node == undefined 
+  if node == undefined
     res.send 'Deploying puppet to all nodes'
     node = 'all'
   else
@@ -58,7 +59,7 @@ deploy_puppet = (res, branch, node) ->
     fab(res, 'node:' + node + ' deploy_puppet')
   else
     fab(res, 'node:' + node + ' deploy_puppet:' + branch)
-  
+
 deploy_django = (res, branch, node) ->
   node = node or 'luke'
   branch = branch or 'master'
