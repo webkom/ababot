@@ -8,6 +8,6 @@ module.exports = (robot) ->
 coffeeStatus = (msg) ->
   msg.http('http://kaffe.abakus.no/api/status')
     .get() (err, res, body) ->
-      json = JSON.parse(body)
-      status = if json['status'] then "on" else "off"
-      msg.send "The Moccamaster is #{status}. It was started at #{json['last_start']}."
+      json = JSON.parse(body).coffee
+      status = if json.status then "on" else "off"
+      msg.send "The Moccamaster is #{status}. It was started at #{json.last_start}."
