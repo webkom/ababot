@@ -22,7 +22,7 @@ def deploy_puppet(branch='master'):
 @task
 def test_puppet(branch='master'):
     """
-    Usage fab deploy_puppet:<branch>
+    Usage fab test_puppet:<branch>
     """
     with cd('/puppet/'):
         run('git fetch && git reset --hard origin/%s' % branch)
