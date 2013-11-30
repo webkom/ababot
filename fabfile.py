@@ -20,6 +20,17 @@ def deploy_puppet(branch='master'):
 
 
 @task
+def test_puppet(branch='master'):
+    """
+    Usage fab test_puppet:<branch>
+    """
+    with cd('/puppet/'):
+        run('git fetch && git reset --hard origin/%s' % branch)
+        run('librarian-puppet install')
+        run('puppet apply --noop manifests/site.pp')
+
+
+@task
 def deploy_django(project='nerd', branch='master'):
     """
     fab deploy_django:<branch>

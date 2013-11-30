@@ -27,6 +27,13 @@ module.exports = (robot) ->
     else
       res.reply "You are not allowed to deploy"
 
+  robot.respond /test puppet(?::(\w+))?(?: (\w+))?/i, (res) ->
+    if res.message.user.name in WHITE_LIST
+      test_puppet(res, res.match[1], res.match[2])
+    else
+      res.reply "You are not allowed to do that"
+
+
   robot.respond /deploy django(?::(\w+))? *(\w+)?/i, (res) ->
     if res.message.user.name in WHITE_LIST
       deploy_django(res, res.match[1], res.match[2])
@@ -59,6 +66,18 @@ deploy_puppet = (res, branch, node) ->
     fab(res, 'node:' + node + ' deploy_puppet')
   else
     fab(res, 'node:' + node + ' deploy_puppet:' + branch)
+
+test_puppet = (res, branch, node) ->
+  if node == undefined 
+    res.send 'Testing puppet on all nodes'
+    node = 'all'
+  else
+    res.send 'Testing puppet on ' + node
+
+  if branch == undefined
+    fab(res, 'node:' + node + ' test_puppet')
+  else
+    fab(res, 'node:' + node + ' test_puppet:' + branch)
 
 deploy_django = (res, branch, node) ->
   node = node or 'luke'
