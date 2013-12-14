@@ -17,7 +17,8 @@ WHITE_LIST = [
   'Ek',
   'danseku',
   'kristine',
-  'hanse'
+  'hanse',
+  'Xmas'
 ]
 
 module.exports = (robot) ->
