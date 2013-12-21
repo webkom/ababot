@@ -31,7 +31,7 @@ def test_puppet(branch='master'):
 
 
 @task
-def deploy_django(project='nerd', branch='master'):
+def deploy_project(project='nerd', branch='master'):
     """
     fab deploy_django:<branch>
     """
@@ -42,8 +42,7 @@ def deploy_django(project='nerd', branch='master'):
         run('git fetch && git reset --hard origin/%s' % branch)
         print list_commits(from_rev=old_revision, to_rev='HEAD')
 
-        run('venv/bin/pip install -r requirements.txt')
-        run('venv/bin/python manage.py syncdb --noinput --migrate')
+        run('make update')
         run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
 
 
