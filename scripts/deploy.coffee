@@ -23,14 +23,14 @@ WHITE_LIST = [
 ]
 
 module.exports = (robot) ->
-  robot.respond /deploy puppet(:(\w+))?(?: (\w+))?/i, (res) ->
-      deploy_puppet(res, res.match[1], res.match[2])
+  robot.respond /deploy puppet(:\w+)?(?: (\w+))?/i, (res) ->
+    deploy_puppet(res, res.match[1], res.match[2])
 
-  robot.respond /test puppet(:(\w+))?(?: (\w+))?/i, (res) ->
-      test_puppet(res, res.match[1], res.match[2])
+  robot.respond /test puppet(:\w+)?(?: (\w+))?/i, (res) ->
+    test_puppet(res, res.match[1], res.match[2])
 
   robot.respond /deploy (nerd|nit|coffee)(?::(\w+))? *(\w+)?/i, (res) ->
-      deploy_project(res, res.match[1], res.match[2], res.match[3])
+    deploy_project(res, res.match[1], res.match[2], res.match[3])
 
 do_command = (res, command, success= -> 'Consider it done!') ->
   if res.message.user.name in WHITE_LIST
