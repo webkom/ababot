@@ -1,7 +1,7 @@
 #!/bin/sh
 
-npm install
-export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
+export PATH="/home/webkom/ababot/node_modules/.bin:/home/webkom/ababot/node_modules/hubot/node_modules/.bin:$PATH"
 
-exec node_modules/.bin/hubot "$@"
+exec /home/webkom/ababot/node_modules/.bin/hubot "$@"
+
 
