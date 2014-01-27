@@ -53,7 +53,6 @@ def node(name):
             'luke.abakus.no',
             'leia.abakus.no',
             'vader.abakus.no',
-            'jarjar.abakus.no',
             'yoda.abakus.no',
             'tits.abakus.no',
         ]
