@@ -1,6 +1,8 @@
 # Description:
 #   Show Abakus coffee status
 #
+# Commands:
+# hubot kaffe - returns information about the coffee brewer at the Abakus-office.
 
 moment = require('moment')
 
