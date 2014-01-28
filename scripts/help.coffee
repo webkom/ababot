@@ -53,7 +53,6 @@ helpContents = (name, commands) ->
 module.exports = (robot) ->
   robot.respond /help\s*(.*)?$/i, (msg) ->
     cmds = robot.helpCommands()
-    console.log("got in")
     filter = msg.match[1]
 
     if filter

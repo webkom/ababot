@@ -15,7 +15,6 @@ module.exports = (robot) ->
       deploy_puppet(res, res.match[1], res.match[2])
 
   robot.respond /test puppet(:\w+)?(?: (\w+))?/i, (res) ->
-    console.log("starting test")
     if msg.envelope.room == "#webkomops"
       test_puppet(res, res.match[1], res.match[2])
 
