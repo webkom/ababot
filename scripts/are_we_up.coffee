@@ -2,7 +2,7 @@
 #    Check all abakus projects
 #
 # Commands:
-# are we up - Check all abakus projects
+# hubot are we up - Check all abakus projects
 
 HTTP = require "http"
 
