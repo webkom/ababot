@@ -2,10 +2,10 @@
 #   Deploy scripts for ababot
 #
 # Commands:
-# hubot deploy puppet <node> - deploys master to <node> or all if node is not specified
-# hubot deploy puppet:<branch> <node> - deploys <branch> to <node> or all if node is not specified
-# hubot test puppet:<branch> <node> - tests <branch> on <node> or on all if node is not specified
-# hubot deploy (nerd|nit|coffee) - deploy project to luke
+# hubot deploy puppet <node> - deploys master to <node> or all if node is not specified (#Internal)
+# hubot deploy puppet:<branch> <node> - deploys <branch> to <node> or all if node is not specified (#Internal)
+# hubot test puppet:<branch> <node> - tests <branch> on <node> or on all if node is not specified (#Internal)
+# hubot deploy (nerd|nit|coffee) - deploy project to luke (#Internal)
 
 exec = require('child_process').exec
 

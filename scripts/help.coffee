@@ -63,11 +63,15 @@ module.exports = (robot) ->
         return
 
     prefix = robot.alias or robot.name
+    console.log(prefix, "alias/name", robot.alias, robot.name)
     cmds = cmds.map (cmd) ->
-      if msg.envelope.room != "#webkomops" and /die|deploy|update|newrelic|test|show (storage|users)/i.test(cmd)
+      if msg.envelope.room != "#webkomops" and /#Internal/i.test(cmd)
         cmd = ""
       else
-        cmd = cmd.replace /^hubot/, prefix
+        if prefix is robot.alias
+          cmd = cmd.replace /^hubot /, prefix
+        else
+          cmd = cmd.replace /^hubot/, prefix
         cmd.replace /hubot/ig, robot.name
 
     emit = cmds.join "\n"

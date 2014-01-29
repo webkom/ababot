@@ -1,7 +1,5 @@
 [
   "shipit.coffee",
   "ascii.coffee",
-  "newrelic.coffee",
-  "update.coffee",
   "travis.coffee"
 ]
