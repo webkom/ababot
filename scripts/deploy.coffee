@@ -11,15 +11,15 @@ exec = require('child_process').exec
 
 module.exports = (robot) ->
   robot.respond /deploy puppet(:\w+)?(?: (\w+))?/i, (res) ->
-    if msg.envelope.room == "#webkomops"
+    if res.envelope.room == "#webkomops"
       deploy_puppet(res, res.match[1], res.match[2])
 
   robot.respond /test puppet(:\w+)?(?: (\w+))?/i, (res) ->
-    if msg.envelope.room == "#webkomops"
+    if res.envelope.room == "#webkomops"
       test_puppet(res, res.match[1], res.match[2])
 
   robot.respond /deploy (nerd|nit|coffee)(?::(\w+))? *(\w+)?/i, (res) ->
-    if msg.envelope.room == "#webkomops"
+    if res.envelope.room == "#webkomops"
       deploy_project(res, res.match[1], res.match[2], res.match[3])
 
 do_command = (res, command, success= -> 'Consider it done!') ->
