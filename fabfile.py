@@ -23,7 +23,7 @@ def deploy_puppet(branch='master'):
 def test_puppet(branch='master'):
     """
     Usage fab test_puppet:<branch>
-    """
+    """  
     with cd('/puppet/'):
         run('git fetch && git reset --hard origin/%s' % branch)
         run('librarian-puppet install')
@@ -45,6 +45,15 @@ def deploy_project(project='nerd', branch='master'):
         run('make update')
         run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
 
+@task
+def update_scripts(branch='master'):
+    """
+    Usage fab update_scripts
+    """
+    with cd('/home/ababot/ababot-scripts/'):
+        run('git fetch && git reset --hard origin/%s' % branch)
+        run('npm version patch')
+        run('npm publish')
 
 @task
 def node(name):
@@ -55,6 +64,7 @@ def node(name):
             'vader.abakus.no',
             'yoda.abakus.no',
             'tits.abakus.no',
+            'jarjar.abakus.no'
         ]
     else:
         env.hosts = ['%s.abakus.no' % name]
