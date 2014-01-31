@@ -12,19 +12,19 @@ exec = require('child_process').exec
 
 module.exports = (robot) ->
   robot.respond /deploy puppet(:\w+)?(?: (\w+))?/i, (res) ->
-    if res.envelope.room == "#webkomops"
+    if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
       deploy_puppet(res, res.match[1], res.match[2])
 
   robot.respond /test puppet(:\w+)?(?: (\w+))?/i, (res) ->
-    if res.envelope.room == "#webkomops"
+    if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
       test_puppet(res, res.match[1], res.match[2])
 
   robot.respond /deploy (nerd|nit|coffee)(?::(\w+))? *(\w+)?/i, (res) ->
-    if res.envelope.room == "#webkomops"
+    if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
       deploy_project(res, res.match[1], res.match[2], res.match[3])
 
   robot.respond /deploybot(:\w+)?/i, (res) ->
-    if res.envelope.room == "#webkomops"
+    if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
       deploy_bot(res, res.match[1])
 
 do_command = (res, command, success= -> 'Done!') ->

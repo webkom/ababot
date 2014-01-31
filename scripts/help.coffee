@@ -63,9 +63,8 @@ module.exports = (robot) ->
         return
 
     prefix = robot.alias or robot.name
-    console.log(prefix, "alias/name", robot.alias, robot.name)
     cmds = cmds.map (cmd) ->
-      if msg.envelope.room != "#webkomops" and /#Internal/i.test(cmd)
+      if msg.envelope.room not in process.env.INTERNAL_CHANNELS.split(',') and /#Internal/i.test(cmd)
         cmd = ""
       else
         if prefix is robot.alias
