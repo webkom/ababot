@@ -50,12 +50,14 @@ def deploy_bot(branch='master'):
     fab deploy_bot:<branch>
     """
     run('sudo service hubot restart')
-    
+
 @task
 def update_scripts(branch='master'):
     """
     Usage fab update_scripts
     """
+    env.user = 'ababot'
+    
     with cd('/home/ababot/ababot-scripts/'):
         run('git fetch && git reset --hard origin/%s' % branch)
         run('npm version patch')
