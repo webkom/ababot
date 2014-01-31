@@ -10,12 +10,12 @@ Util = require "util"
 
 module.exports = (robot) ->
   robot.respond /show storage$/i, (msg) ->
-    if msg.envelope.room == "#webkomops"
+    if msg.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
       output = Util.inspect(robot.brain.data, false, 4)
       msg.send output
 
   robot.respond /show users$/i, (msg) ->
-    if msg.envelope.room == "#webkomops"
+    if msg.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
       response = ""
 
       for own key, user of robot.brain.data.users
