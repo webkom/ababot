@@ -55,13 +55,10 @@ def deploy_bot(branch='master'):
 def update_scripts(branch='master'):
     """
     Usage fab update_scripts
-    """
-    env.user = 'ababot'
-    
+    """    
     with cd('/home/ababot/ababot-scripts/'):
         run('git fetch && git reset --hard origin/%s' % branch)
-        run('npm version patch')
-        run('npm publish')
+        run('npm publish --force')
 
 @task
 def node(name):
