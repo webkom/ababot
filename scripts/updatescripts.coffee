@@ -8,7 +8,7 @@ exec = require('child_process').exec
 
 module.exports = (robot) ->
 	robot.respond /updatescripts/i, (msg) ->
-    if msg.envelope.room != "#webkomops"
+    if msg.envelope.room == "#webkomops"
       msg.send("Publishing NPM-package.")
       do_command "fab node:yoda update_scripts --hide=stdout,status,running", (err, message) ->
         return msg.send err if err
