@@ -2,7 +2,7 @@
 #   Update the public Ababot scripts. 
 #
 # Commands:
-# hubot updatescripts - updates ababot with the latest public scripts from the public repo: PUTREPOURLHERE (#Internal)
+# hubot updatescripts - updates ababot with the latest public scripts from the public repo: http://github.com/webkom/ababot-scripts (#Internal)
 
 exec = require('child_process').exec
 
