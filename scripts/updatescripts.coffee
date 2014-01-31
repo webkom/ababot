@@ -21,7 +21,7 @@ module.exports = (robot) ->
           do_command "npm install ababot-scripts --force", (err3, message3) ->
             return msg.send err3 if err3
             msg.send message3
-            msg.send "Scripts successfully installed (npm install complete). Run !deploy_bot when you want to refresh scripts."
+            msg.send "Scripts successfully installed (npm install complete). Run !deploybot when you want to refresh scripts."
 
 do_command = (command, fn) ->
   exec command, (err, stdout, stderr) ->
