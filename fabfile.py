@@ -41,12 +41,9 @@ def deploy_project(project='nerd', branch='master'):
     """
     env.user = 'webkom'
     with cd('/home/webkom/webapps/%s/' % project):
-
         old_revision = run('git rev-parse HEAD')
-        run('git fetch && git reset --hard origin/%s' % branch)
-        print list_commits(from_rev=old_revision, to_rev='HEAD')
-
         run('make update')
+        print list_commits(from_rev=old_revision, to_rev='HEAD')
         run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
 
 
