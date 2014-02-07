@@ -1,4 +1,5 @@
 [
+  "update.coffee",
   "shipit.coffee",
   "ascii.coffee",
   "travis.coffee"

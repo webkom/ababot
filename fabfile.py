@@ -52,15 +52,6 @@ def deploy_bot(branch='master'):
     run('sudo service hubot restart')
 
 @task
-def update_scripts(branch='master'):
-    """
-    Usage fab update_scripts
-    """    
-    with cd('/home/ababot/ababot-scripts/'):
-        run('git fetch && git reset --hard origin/%s' % branch)
-        run('npm publish --force')
-
-@task
 def node(name):
     if name == 'all':
         env.hosts = [
