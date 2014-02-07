@@ -18,7 +18,7 @@ module.exports = (robot) ->
     msg.send "Server time is: #{new Date()}"
 
   robot.respond /DIE$/i, (msg) ->
-    if msg.envelope.room == "#webkomops"
+    if msg.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
       msg.send "Goodbye, cruel world."
       process.exit 0
 

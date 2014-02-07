@@ -25,7 +25,7 @@ def deploy_puppet(branch='master'):
 def test_puppet(branch='master'):
     """
     Usage fab test_puppet:<branch>
-    """
+    """  
     with cd('/puppet/'):
         old_revision = run('git rev-parse HEAD')
         run('git fetch && git reset --hard origin/%s' % branch)
@@ -46,6 +46,12 @@ def deploy_project(project='nerd', branch='master'):
         print list_commits(from_rev=old_revision, to_rev='HEAD')
         run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
 
+@task
+def deploy_bot(branch='master'):
+    """
+    fab deploy_bot:<branch>
+    """
+    run('sudo service hubot restart')
 
 @task
 def node(name):
@@ -56,6 +62,7 @@ def node(name):
             'vader.abakus.no',
             'yoda.abakus.no',
             'tits.abakus.no',
+            'jarjar.abakus.no'
         ]
     else:
         env.hosts = ['%s.abakus.no' % name]
