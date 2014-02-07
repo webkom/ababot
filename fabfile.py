@@ -14,7 +14,9 @@ def deploy_puppet(branch='master'):
     Usage fab deploy_puppet:<branch>
     """
     with cd('/puppet/'):
+        old_revision = run('git rev-parse HEAD')
         run('git fetch && git reset --hard origin/%s' % branch)
+        print list_commits(from_rev=old_revision, to_rev='HEAD')
         run('librarian-puppet install')
         run('puppet apply manifests/site.pp')
 
@@ -25,7 +27,9 @@ def test_puppet(branch='master'):
     Usage fab test_puppet:<branch>
     """  
     with cd('/puppet/'):
+        old_revision = run('git rev-parse HEAD')
         run('git fetch && git reset --hard origin/%s' % branch)
+        print list_commits(from_rev=old_revision, to_rev='HEAD')
         run('librarian-puppet install')
         run('puppet apply --noop manifests/site.pp')
 
@@ -38,10 +42,8 @@ def deploy_project(project='nerd', branch='master'):
     env.user = 'webkom'
     with cd('/home/webkom/webapps/%s/' % project):
         old_revision = run('git rev-parse HEAD')
-        run('git fetch && git reset --hard origin/%s' % branch)
-        print list_commits(from_rev=old_revision, to_rev='HEAD')
-
         run('make update')
+        print list_commits(from_rev=old_revision, to_rev='HEAD')
         run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
 
 @task

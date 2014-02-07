@@ -24,7 +24,8 @@
     "hubot-irc": "~0.1.19",
     "gitio": "~1.0.1",
     "moment": ">= 2.5.0",
-    "ababot-scripts": ">= 0.1.0"
+    "ababot-scripts": ">= 0.1.0",
+    "hubot-appearin": ">= 1.0.0"
   },
   "engines": {
     "node": ">= 0.8.x",
