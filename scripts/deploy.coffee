@@ -8,7 +8,7 @@
 # hubot deploy (nerd|nit|coffee) - deploy project to luke (#Internal)
 # hubot deploybot:<branch> - deploys and restarts ababot (#Internal)
 
-exec = require('child_process').exec
+spawn = require('child_process').spawn
 
 module.exports = (robot) ->
   robot.respond /deploy puppet(:\w+)?(?: (\w+))?/i, (res) ->
@@ -27,47 +27,57 @@ module.exports = (robot) ->
     if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
       deploy_bot(res, res.match[1])
 
-do_command = (res, command, success= -> 'Done!') ->
-  exec command, (error, stdout, stderr) ->
-    res.send error if error
-    res.send stderr if stderr
+fab = (res, args, success = 'Consider it done!', error = 'Sorry! I could not do what you asked of me') ->
+  fabric = spawn('fab', args)
+  failed = false
+  fabric.stderr.on 'data', (data) -> 
+    res.send data
+    failed = true
 
-    if stdout
-      for line in stdout.split('\n')
-        res.send line if line.length > 1
+  fabric.stdout.on 'data', (data) -> 
+    if /Error:/.test(data)
+      message = data.toString().match /(Error: .*)/
+      res.send message[0]
+      failed = true
+    else if /librarian-puppet install/.test(data)
+      res.send 'Running librarian install'
+    else if /HEAD is now at/.test(data)
+      status = data.toString().match /(HEAD is now at [a-zA-Z0-9]+)/
+      res.send status[0] 
+    if /puppet apply/.test(data)
+      node = data.toString().match(/\[([a-z0-9]+)\./)[1]
+      res.send "Running puppet apply on #{node}"
 
-    if !stderr and ! error
-      res.reply success()
-
-fab = (res, command, success) ->
-  do_command(res, "fab #{command} --hide=stdout,status,running", success)
+  fabric.on 'close', (code) ->
+    if code == 0 and not failed
+      res.send success
+    else
+      res.send error 
 
 deploy_puppet = (res, branch, node) ->
   node = node or 'all'
   branch = branch or ''
   res.send "Deploying puppet to #{node}"
 
-  fab(res, "node:#{node} deploy_puppet#{branch}")
+  fab(res, ["node:#{node}", "deploy_puppet#{branch}"])
 
 test_puppet = (res, branch, node) ->
   node = node or 'all'
   branch = branch or ''
   res.send "Testing puppet on #{node}"
 
-  fab(res, "node:#{node} test_puppet#{branch}")
+  fab(res, ["node:#{node}", "test_puppet#{branch}"], 'Test failed...')
 
 deploy_project = (res, project, branch, node) ->
   node = node or 'luke'
   branch = branch or 'master'
 
   res.send "Deploying #{project}:#{branch} to #{node}..."
-  fab(res, "node:#{node} deploy_project:#{project},#{branch}", ->
+  fab(res, ["node:#{node}", "deploy_project:#{project},#{branch}"],
     "All done! #{branch} was successfully deployed to #{node}"
   )
 
 deploy_bot = (res, branch) ->
   branch = branch or "master"
   res.send "Restarting and deploying ababot, branch: #{branch}..."
-  fab(res, "node:yoda deploy_bot:#{branch}", ->
-    "All done! Ababot deployed. "
-  )
+  fab(res, ["node:yoda",  "deploy_bot:#{branch}"], "All done! Ababot deployed.")
