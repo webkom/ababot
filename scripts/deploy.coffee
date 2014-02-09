@@ -10,21 +10,24 @@
 
 spawn = require('child_process').spawn
 
+is_ops_room = (room) ->
+  return room in process.env.INTERNAL_CHANNELS.split(',') or room == 'Shell'
+
 module.exports = (robot) ->
   robot.respond /deploy puppet(:\w+)?(?: (\w+))?/i, (res) ->
-    if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
+    if is_ops_room res.envelope.room
       deploy_puppet(res, res.match[1], res.match[2])
 
   robot.respond /test puppet(:\w+)?(?: (\w+))?/i, (res) ->
-    if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
+    if is_ops_room res.envelope.room
       test_puppet(res, res.match[1], res.match[2])
 
   robot.respond /deploy (nerd|nit|coffee)(?::(\w+))? *(\w+)?/i, (res) ->
-    if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
+    if is_ops_room res.envelope.room
       deploy_project(res, res.match[1], res.match[2], res.match[3])
 
   robot.respond /deploybot(:\w+)?/i, (res) ->
-    if res.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
+    if is_ops_room res.envelope.room
       deploy_bot(res, res.match[1])
 
 fab = (res, args, success = 'Consider it done!', error = 'Sorry! I could not do what you asked of me') ->
