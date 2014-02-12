@@ -7,6 +7,9 @@
 #   hubot time - Reply with current time
 #   hubot die - End hubot process (#Internal)
 
+is_ops_room = (room) ->
+  return room in process.env.HUBOT_INTERNAL_CHANNELS.split(',') or room is 'Shell'
+
 module.exports = (robot) ->
   robot.respond /PING$/i, (msg) ->
     msg.send "PONG"
@@ -18,7 +21,7 @@ module.exports = (robot) ->
     msg.send "Server time is: #{new Date()}"
 
   robot.respond /DIE$/i, (msg) ->
-    if msg.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
+    if is_ops_roomm sg.envelope.room 
       msg.send "Goodbye, cruel world."
       process.exit 0
 
