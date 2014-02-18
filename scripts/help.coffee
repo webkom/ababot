@@ -75,7 +75,7 @@ module.exports = (robot) ->
 
     emit = cmds.join "\n"
 
-    user = response.message.user.name 
+    user = msg.message.user.name 
     if user
       unless user == "ababot" # We don't want the bot to PM itself...
         robot.send({user: {name: user}}, emit)
