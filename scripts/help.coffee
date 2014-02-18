@@ -75,7 +75,13 @@ module.exports = (robot) ->
 
     emit = cmds.join "\n"
 
-    msg.send emit
+    user = msg.message.user.name 
+    if user
+      unless user == "ababot" # We don't want the bot to PM itself...
+        robot.send({user: {name: user}}, emit)
+        msg.send 'I sent you a PM, hopes that helps you out'
+    else
+      msg.send emit
 
   robot.router.get "/#{robot.name}/help", (req, res) ->
     cmds = robot.helpCommands().map (cmd) ->
