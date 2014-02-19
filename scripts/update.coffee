@@ -23,7 +23,7 @@ module.exports = (robot) ->
     robot.respond /pending updates?\??$/i, (msg) ->
         if msg.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
             if downloaded_updates
-                msg.send "I have some pending updates, KILL ME PLEASE! (hint: hubot die)"
+                msg.send "I have some pending updates, KILL ME PLEASE! (hint: !deploybot)"
             else
                 msg.send "I'm up-to-date!"
 
@@ -56,10 +56,10 @@ module.exports = (robot) ->
                                     msg.send "all dependencies are up-to-date"
                             if changes
                                 downloaded_updates = true
-                                msg.send "I downloaded some updates, KILL ME PLEASE! (hint: hubot die)"
+                                msg.send "I downloaded some updates, KILL ME PLEASE! (hint: !deploybot)"
                             else
                                 if downloaded_updates
-                                    msg.send "I have some pending updates, KILL ME PLEASE! (hint: hubot die)"
+                                    msg.send "I have some pending updates, KILL ME PLEASE! (hint: !deploybot)"
                                 else
                                     msg.send "I'm up-to-date!"
                     catch error
