@@ -8,14 +8,17 @@
 
 Util = require "util"
 
+is_ops_room = (room) ->
+  return room in process.env.HUBOT_INTERNAL_CHANNELS.split(',') or room is 'Shell'
+
 module.exports = (robot) ->
   robot.respond /show storage$/i, (msg) ->
-    if msg.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
+    if is_ops_room msg.envelope.room
       output = Util.inspect(robot.brain.data, false, 4)
       msg.send output
 
   robot.respond /show users$/i, (msg) ->
-    if msg.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
+    if is_ops_room msg.envelope.room 
       response = ""
 
       for own key, user of robot.brain.data.users

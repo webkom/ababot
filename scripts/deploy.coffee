@@ -11,7 +11,7 @@
 spawn = require('child_process').spawn
 
 is_ops_room = (room) ->
-  return room in process.env.INTERNAL_CHANNELS.split(',') or room == 'Shell'
+  return room in process.env.HUBOT_INTERNAL_CHANNELS.split(',') or room is 'Shell'
 
 module.exports = (robot) ->
   robot.respond /deploy puppet(:\w+)?(?: (\w+))?/i, (res) ->

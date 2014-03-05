@@ -18,6 +18,9 @@
 child_process = require 'child_process'
 downloaded_updates = false
 
+is_ops_room = (room) ->
+  return room in process.env.HUBOT_INTERNAL_CHANNELS.split(',') or room is 'Shell'
+
 module.exports = (robot) ->
 
     robot.respond /pending updates?\??$/i, (msg) ->
@@ -28,7 +31,7 @@ module.exports = (robot) ->
                 msg.send "I'm up-to-date!"
 
     robot.respond /update( yourself)?$/i, (msg) ->
-        if msg.envelope.room in process.env.INTERNAL_CHANNELS.split(",")
+        if is_ops_room msg.envelope.room
             changes = false
             try
                 msg.send "git pull..."
