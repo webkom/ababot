@@ -61,7 +61,7 @@ def node(name):
             'leia.abakus.no',
             'vader.abakus.no',
             'yoda.abakus.no',
-            'tits.abakus.no',
+            '129.241.208.142', # Tits, domain does not work..
             'jarjar.abakus.no'
         ]
     else:
