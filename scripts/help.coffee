@@ -67,7 +67,7 @@ module.exports = (robot) ->
 
     prefix = robot.alias or robot.name
     cmds = cmds.map (cmd) ->
-      if not is_ops_room msg.envelope.room and /#Internal/i.test(cmd)
+      if not is_ops_room(msg.envelope.room) and /#Internal/i.test(cmd)
         cmd = ""
       else
         if prefix is robot.alias
