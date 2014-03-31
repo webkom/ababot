@@ -81,7 +81,7 @@ module.exports = (robot) ->
     user = msg.message.user.name 
     if user
       unless user == "ababot" # We don't want the bot to PM itself...
-        msg.reply 'I am sending you a PM, hopes that helps out..'
+        msg.reply 'I am sending you a PM, hopefully that will help you out!'
         robot.send({user: {name: user}}, emit)
     else
       msg.send emit
