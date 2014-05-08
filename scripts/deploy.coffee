@@ -84,3 +84,11 @@ deploy_bot = (res, branch) ->
   branch = branch or "master"
   res.send "Restarting and deploying ababot, branch: #{branch}..."
   fab(res, ["node:yoda",  "deploy_bot:#{branch}"], "All done! Ababot deployed.")
+
+deploy_node = (res, project, branch, node) ->
+  node = node or 'luke'
+  project = project or 'nit'
+  branch = branch or 'master'
+  res.send "Deploying node project #{project} to #{node}"
+
+  fab(res, ["node:#{node}", "deploy_node:#{project},#{branch}"])
