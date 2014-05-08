@@ -10,6 +10,8 @@
 
 spawn = require('child_process').spawn
 
+node_apps = ['nit']
+
 is_ops_room = (room) ->
   return room in process.env.HUBOT_INTERNAL_CHANNELS.split(',') or room is 'Shell'
 
@@ -24,7 +26,10 @@ module.exports = (robot) ->
 
   robot.respond /deploy (nerd|nit|coffee)(?::(\w+))? *(\w+)?/i, (res) ->
     if is_ops_room res.envelope.room
-      deploy_project(res, res.match[1], res.match[2], res.match[3])
+      if (node_apps.indexOf res.match[1])
+        deploy_node res, res.match[1], res.match[2], res.match[3]
+      else
+        deploy_project(res, res.match[1], res.match[2], res.match[3])
 
   robot.respond /deploybot(:\w+)?/i, (res) ->
     if is_ops_room res.envelope.room
@@ -91,4 +96,4 @@ deploy_node = (res, project, branch, node) ->
   branch = branch or 'master'
   res.send "Deploying node project #{project} to #{node}"
 
-  fab(res, ["node:#{node}", "deploy_node:#{project},#{branch}"])
+  fab res, ["node:#{node}", "deploy_node:#{project},#{branch}"]
