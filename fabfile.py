@@ -51,7 +51,6 @@ def deploy_node(project='nit', branch='master'):
     """
     fab deploy_node:<branch>
     """
-    env.user = project
     with cd('/home/%s/%s' % (project, project)):
         old_revision = run('git rev-parse HEAD')
         run('git fetch && git reset --hard origin/%s' % branch)
