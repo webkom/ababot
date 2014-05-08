@@ -47,6 +47,21 @@ def deploy_project(project='nerd', branch='master'):
         run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
 
 @task
+def deploy_node(project='nit', branch='master'):
+    """
+    fab deploy_node:<branch>
+    """
+    env.user = project
+    with cd('/home/%s/%s' % (project, project)):
+        old_revision = run('git rev-parse HEAD')
+        run('git fetch && git reset --hard origin/%s' % branch)
+        print list_commits(from_rev=old_revision, to_rev='HEAD')
+        run('make clean')
+        run('make install')
+        run('make')
+        run('service %s restart' % project)
+
+@task
 def deploy_bot(branch='master'):
     """
     fab deploy_bot:<branch>
