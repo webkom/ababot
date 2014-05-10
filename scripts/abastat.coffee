@@ -10,7 +10,7 @@ module.exports = (robot) ->
       if password == process.env.ABASTAT_PASSWORD:
         robot.logger.info "Abastat: '#{message}'"
         for channel in process.env.ABASTAT_CHANNELS.split(",")
-          robot.send channel, "Abastat: #{message}"
+          robot.messageRoom channel, "Abastat: #{message}"
         res.writeHead 200, {'Content-Type': 'text/plain'}
         res.end 'OK'
       else
