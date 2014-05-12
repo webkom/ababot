@@ -26,8 +26,8 @@ module.exports = (robot) ->
 
   robot.respond /deploy (nerd|nit|coffee)(?::(\w+))? *(\w+)?/i, (res) ->
     if is_ops_room res.envelope.room
-      if (node_apps.indexOf res.match[1] != -1)
-        deploy_node res, res.match[1], res.match[2], res.match[3]
+      if (node_apps.indexOf(res.match[1]) != -1)
+        deploy_node(res, res.match[1], res.match[2], res.match[3])
       else
         deploy_project(res, res.match[1], res.match[2], res.match[3])
 
