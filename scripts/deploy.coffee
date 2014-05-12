@@ -5,8 +5,7 @@
 # hubot deploy puppet <node> - deploys master to <node> or all if node is not specified (#Internal)
 # hubot deploy puppet:<branch> <node> - deploys <branch> to <node> or all if node is not specified (#Internal)
 # hubot test puppet:<branch> <node> - tests <branch> on <node> or on all if node is not specified (#Internal)
-# hubot deploy (nerd|nit|coffee) - deploy project to luke (#Internal)
-# hubot deploybot:<branch> - deploys and restarts ababot (#Internal)
+# hubot deploy (bot|nerd|nit|coffee):<branch> <node> - deploy project to luke (#Internal)
 
 spawn = require('child_process').spawn
 
