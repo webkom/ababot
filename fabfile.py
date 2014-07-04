@@ -25,7 +25,7 @@ def deploy_puppet(branch='master'):
 def test_puppet(branch='master'):
     """
     Usage fab test_puppet:<branch>
-    """  
+    """
     with cd('/puppet/'):
         old_revision = run('git rev-parse HEAD')
         run('git fetch && git reset --hard origin/%s' % branch)
@@ -46,6 +46,7 @@ def deploy_project(project='nerd', branch='master'):
         print list_commits(from_rev=old_revision, to_rev='HEAD')
         run('sudo touch /etc/uwsgi/apps-enabled/%s.ini' % project)
 
+
 @task
 def deploy_node(project='nit', branch='master'):
     """
@@ -60,12 +61,14 @@ def deploy_node(project='nit', branch='master'):
         run('make')
         run('service %s restart' % project)
 
+
 @task
 def deploy_bot(branch='master'):
     """
     fab deploy_bot:<branch>
     """
     run('sudo service hubot restart')
+
 
 @task
 def node(name):
@@ -75,7 +78,7 @@ def node(name):
             'leia.abakus.no',
             'vader.abakus.no',
             'yoda.abakus.no',
-            '129.241.208.142', # Tits, domain does not work..
+            '129.241.208.142',  # Tits, domain does not work..
             'jarjar.abakus.no'
         ]
     else:
@@ -87,8 +90,8 @@ def list_commits(from_rev, to_rev):
     Print a list of all commits made between from_rev and to_rev
     """
 
-    return clean(run("git log %s..%s --no-merges --pretty=format:'%%h %%s (%%an)'" % (from_rev,
-                                                                                      to_rev)))
+    return clean(run("git log %s..%s --no-merges --pretty=format:"
+                     "'%%h %%s (%%an)'" % (from_rev, to_rev)))
 
 
 def clean(content):
