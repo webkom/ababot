@@ -5,7 +5,7 @@
 # hubot deploy puppet <node> - deploys master to <node> or all if node is not specified (#Internal)
 # hubot deploy puppet:<branch> <node> - deploys <branch> to <node> or all if node is not specified (#Internal)
 # hubot test puppet:<branch> <node> - tests <branch> on <node> or on all if node is not specified (#Internal)
-# hubot deploy (bot|nerd|nit|coffee|foto):<branch> <node> - deploy project to luke (#Internal)
+# hubot deploy (bot|nerd|nit|coffee|foto|census):<branch> <node> - deploy project to luke (#Internal)
 
 spawn = require('child_process').spawn
 
@@ -21,10 +21,10 @@ module.exports = (robot) ->
     if is_ops_room res.envelope.room
       test_puppet(res, res.match[1], res.match[2])
 
-  robot.respond /deploy (bot|nerd|nit|coffee|foto)(?::(\w+))? *(\w+)?/i, (res) ->
+  robot.respond /deploy (bot|nerd|nit|coffee|foto|census)(?::(\w+))? *(\w+)?/i, (res) ->
     if is_ops_room res.envelope.room
       switch res.match[1]
-        when 'nit', 'foto'
+        when 'nit', 'foto', 'census'
           deploy_node(res, res.match[1], res.match[2], res.match[3])
         when 'bot'
           deploy_bot(res, res.match[2])
