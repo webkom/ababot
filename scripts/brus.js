@@ -21,7 +21,7 @@ const callAPI = (msg, path) =>
 module.exports = (robot) => {
 
   robot.respond('/kjøp brus (.*)/i', (msg) => {
-    callAPI(msg, '/purchase/').post(JSON.stringify({ name: msg.match[1] }))((err, res, body) => {
+    callAPI(msg, '/purchase/').post(JSON.stringify({ name: 'Sylliaas' }))((err, res, body) => {
       if (!err) {
         if (res.statusCode == 201) {
           const json = JSON.parse(body);
