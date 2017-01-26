@@ -10,28 +10,21 @@
 
 const _ = require('lodash');
 const fetch = require('node-fetch');
+const members = require('../lib/members');
 
 const {
-  MEMBERS_URL,
   SODA_TOKEN,
   SODA_URL
 } = process.env;
 
 function brus(path, options = {}) {
-  return fetch(`${SODA_URL}/api/liste${path}`, Object.assign(
-    options, {
-      method: 'GET',
-      headers: {
-        Authorization: `Token ${SODA_TOKEN}`,
-        'Content-Type': 'application/json'
-      }
+  return fetch(`${SODA_URL}/api/liste${path}`, Object.assign({
+    method: 'GET',
+    headers: {
+      Authorization: `Token ${SODA_TOKEN}`,
+      'Content-Type': 'application/json'
     }
-  ));
-}
-
-function members(path, options = {}) {
-  return fetch(`${MEMBERS_URL}${path}`)
-    .then((response) => response.json());
+  }, options));
 }
 
 function getSodaName(slackName) {
@@ -60,18 +53,16 @@ module.exports = (robot) => {
           })
         })
           .then((response) => {
-            if (response.status !== 201) {
+            if (!response.ok) {
               throw new Error('Jeg klarte ikke å kjøpe brusen');
             }
 
             return response.json();
           })
-          .then((body) => {
-            return `Du fikk kjøpt en brus, ${body.name} sin nye saldo er ${body.balance}`;
-          })
+          .then((body) => `Du fikk kjøpt en brus, ${body.name} sin nye saldo er ${body.balance}`)
       })
         .then(send)
-        .catch(send);
+        .catch((error) => send(error.message));
   });
 
   robot.respond(/saldo brus( .*)?/i, (msg) => {
@@ -91,7 +82,7 @@ module.exports = (robot) => {
           .then((body) => `${body.name} sin saldo er ${body.balance} spenn.`)
       })
       .then(send)
-      .catch(send)
+      .catch((error) => send(error.message))
   });
 
 };
