@@ -30,7 +30,7 @@ module.exports = (robot) => {
       .catch((error) => msg.send(error.message));
   });
 
-  robot.hear(/@aktive/i, (msg) => {
+  robot.hear(/@aktive|@active/i, (msg) => {
     // Reply with a message containing mentions of all active users.
     members('?active=true')
       .then((members) => {
