@@ -41,6 +41,26 @@ function getSodaName(slackName) {
 }
 
 module.exports = (robot) => {
+  robot.respond(/kjøp øl/i, (msg) => {
+    robot.adapter.client.web.reactions.add(
+      'beer',
+      {
+        channel: msg.message.room,
+        timestamp: msg.message.id
+      }
+    )
+  });
+
+  robot.respond(/kjøp shot/i, (msg) => {
+    robot.adapter.client.web.reactions.add(
+      'cocktail',
+      {
+        channel: msg.message.room,
+        timestamp: msg.message.id
+      }
+    )
+  });
+
   robot.respond(/kjøp brus/i, (msg) => {
     const send = msg.send.bind(msg);
 
