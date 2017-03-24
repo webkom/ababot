@@ -8,6 +8,7 @@
     "hubot": "2.19.0",
     "hubot-diagnostics": "0.0.1",
     "hubot-help": "0.2.0",
+    "hubot-slack-reaction": "0.0.4", 
     "hubot-redis-brain": "0.0.3",
     "hubot-slack": "4.2.2",
     "lodash": "^4.17.3",
