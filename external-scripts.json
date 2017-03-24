@@ -1,4 +1,5 @@
 [
   "hubot-diagnostics",
-  "hubot-help"
+  "hubot-help",
+  "hubot-slack-reaction"
 ]
