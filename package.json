@@ -5,6 +5,8 @@
   "author": "Abakus Webkom <webkom@abakus.no>",
   "description": "A simple helpful robot for your Company",
   "dependencies": {
+    "aws-sdk": "^2.46.0",
+    "bluebird": "^3.5.0",
     "hubot": "2.19.0",
     "hubot-diagnostics": "0.0.1",
     "hubot-help": "0.2.0",
@@ -12,6 +14,7 @@
     "hubot-slack": "4.2.2",
     "lodash": "^4.17.3",
     "moment": "^2.17.1",
+    "nexmo": "^2.0.2",
     "node-fetch": "^1.6.3"
   },
   "engines": {
