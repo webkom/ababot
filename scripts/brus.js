@@ -61,10 +61,11 @@ module.exports = (robot) => {
     )
   });
 
-  robot.respond(/kjøp brus/i, (msg) => {
+  robot.respond(/kjøp brus (.*)?/i, (msg) => {
     const send = msg.send.bind(msg);
+    const slackName = msg.match[1] ? msg.match[1].trim() : msg.message.user.name;
 
-    getSodaName(msg.message.user.name)
+    getSodaName(slackName)
       .then((name) => {
         return brus('/purchase/', {
           method: 'POST',
@@ -85,7 +86,7 @@ module.exports = (robot) => {
         .catch((error) => send(error.message));
   });
 
-  robot.respond(/saldo brus( .*)?/i, (msg) => {
+  robot.respond(/saldo brus (.*)?/i, (msg) => {
     const send = msg.send.bind(msg);
     const slackName = msg.match[1] ? msg.match[1].trim() : msg.message.user.name;
 
