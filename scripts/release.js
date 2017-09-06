@@ -11,7 +11,7 @@ github.authenticate({
 });
 
 module.exports = (robot) => {
-  const pattern = '0 0 12 * * *';
+  const pattern = '0 0 11 * * *';
   const timezone = 'Europe/Oslo'
 
   const countdown = function () {
