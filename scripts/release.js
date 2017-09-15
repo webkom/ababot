@@ -26,13 +26,14 @@ module.exports = (robot) => {
         .then(({ data }) => data.length),
     })
     .then((data) => {
+      const daysLeft = moment('1/10/2017', 'DD/MM/YYYY').diff(moment(), 'days');
       robot.messageRoom('general', {
         "attachments": [
             {
-                "fallback": "Required plain-text summary of the attachment.",
+                "fallback": `Lego release: ${daysLeft} dager igjen!!`,
                 "color": "#36a64f",
                 "title": "Lego Release Countdown!",
-                "text": `${moment('1/10/2017', 'DD/MM/YYYY').diff(moment(), 'days')} dager til release!!`,
+                "text": `${daysLeft} dager til release!!`,
                 "fields": [
                     {
                         "title": "lego release",
