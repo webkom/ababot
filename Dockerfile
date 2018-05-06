@@ -8,6 +8,6 @@ COPY . /app/
 WORKDIR /app
 
 RUN set -e \
-  && npm install
+  && yarn
 
 ENTRYPOINT ["bin/hubot"]
