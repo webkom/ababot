@@ -6,18 +6,22 @@ const _ = require('lodash');
 const members = require('../lib/members');
 
 const prefixes = [
-    'Time to shine', "The work doesn't do itself", 'Get going', 'lol rekt',
-    'About time you got picked', 'RIP', 'Move it'
+  'Time to shine',
+  "The work doesn't do itself",
+  'Get going',
+  'lol rekt',
+  'About time you got picked',
+  'RIP',
+  'Move it'
 ];
 
-const createMention = (username) => `@${username}`;
+const createMention = username => `@${username}`;
 
-module.exports = (robot) => {
-
-  robot.hear(/@noen/i, (msg) => {
+module.exports = robot => {
+  robot.hear(/@noen/i, msg => {
     // Reply with a cheesy message and a random picked mention.
     members()
-      .then((members) => {
+      .then(members => {
         if (!members.length) {
           return;
         }
@@ -27,32 +31,31 @@ module.exports = (robot) => {
         const cheesyPrefix = _.sample(prefixes);
         msg.send(`${cheesyPrefix} ${mention}`);
       })
-      .catch((error) => msg.send(error.message));
+      .catch(error => msg.send(error.message));
   });
 
-  robot.hear(/@aktive|@active/i, (msg) => {
+  robot.hear(/@aktive|@active/i, msg => {
     // Reply with a message containing mentions of all active users.
     members('?active=true')
-      .then((members) => {
+      .then(members => {
         if (members.length === 0) {
           return;
         }
 
-        msg.send(members.map((member) => createMention(member.slack)).join(', '));
+        msg.send(members.map(member => createMention(member.slack)).join(', '));
       })
-      .catch((error) => msg.send(error.message));
+      .catch(error => msg.send(error.message));
   });
 
-  robot.hear(/@nye/i, (msg) => {
+  robot.hear(/@nye/i, msg => {
     members('?new=true')
-      .then((members) => {
+      .then(members => {
         if (members.length === 0) {
           return;
         }
 
-        msg.send(members.map((member) => createMention(member.slack)).join(', '));
+        msg.send(members.map(member => createMention(member.slack)).join(', '));
       })
-      .catch((error) => msg.send(error.message));
+      .catch(error => msg.send(error.message));
   });
-
 };

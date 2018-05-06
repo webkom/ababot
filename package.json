@@ -4,6 +4,11 @@
   "private": true,
   "author": "Abakus Webkom <webkom@abakus.no>",
   "description": "A simple helpful robot for your Company",
+  "scripts": {
+    "lint": "yarn run lint:prettier",
+    "lint:prettier": "prettier '**/*.js' --list-different",
+    "prettier": "prettier '**/*.js' --write"
+  },
   "dependencies": {
     "hubot": "2.19.0",
     "hubot-diagnostics": "0.0.1",
@@ -15,6 +20,12 @@
     "node-fetch": "^1.6.3"
   },
   "engines": {
-    "node": "7.x.x"
+    "node": "8.x.x"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "devDependencies": {
+    "prettier": "^1.12.1"
   }
 }
