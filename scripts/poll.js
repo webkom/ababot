@@ -5,25 +5,16 @@
 
 const _ = require('lodash');
 
-const createPoll = message => {
+const defaultReaction = 'x';
+
+const createPoll = (message, reactionPool) => {
   const [name, ...options] = (message.match(/\".+?\"/g) || []).map(string =>
     string.replace(/\"/g, '')
   );
-  const reactionPool = _.shuffle([
-    'shitpost',
-    'rask',
-    'mord',
-    'ekern',
-    'eddie',
-    'rekt',
-    'jakt',
-    'long-snoot',
-    'skrivermaster'
-  ]);
   return {
     name,
     options: options.map(option => ({
-      reaction: reactionPool.length ? reactionPool.pop() : 'rip',
+      reaction: reactionPool.length ? reactionPool.pop() : defaultReaction,
       text: option
     }))
   };
@@ -37,22 +28,36 @@ const createResponse = poll => {
 
 module.exports = robot => {
   robot.respond(/poll/i, msg => {
-    const poll = createPoll(msg.message.text);
-    if (poll.name && poll.options.length >= 2) {
-      const response = createResponse(poll);
-      robot.adapter.client.web.chat
-        .postMessage(msg.message.room, response)
-        .then(r => {
-          if (r.ok)
-            poll.options
-              .filter(({ reaction }) => reaction !== 'rip')
-              .map(({ reaction }) =>
-                robot.adapter.client.web.reactions.add(reaction, {
-                  channel: msg.message.room,
-                  timestamp: r.ts
-                })
-              );
-        });
-    }
+    robot.adapter.client.web.emoji
+      .list()
+      .then(
+        r =>
+          r.ok
+            ? _.shuffle(
+                Object.keys(r.emoji).filter(
+                  emoji => !r.emoji[emoji].startsWith('alias:')
+                )
+              )
+            : []
+      )
+      .then(reactionPool => {
+        const poll = createPoll(msg.message.text, reactionPool);
+        if (poll.name && poll.options.length >= 2) {
+          const response = createResponse(poll);
+          robot.adapter.client.web.chat
+            .postMessage(msg.message.room, response, { username: 'hubot' })
+            .then(r => {
+              if (r.ok)
+                poll.options
+                  .filter(({ reaction }) => reaction !== defaultReaction)
+                  .map(({ reaction }) =>
+                    robot.adapter.client.web.reactions.add(reaction, {
+                      channel: msg.message.room,
+                      timestamp: r.ts
+                    })
+                  );
+            });
+        }
+      });
   });
 };
