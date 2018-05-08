@@ -30,15 +30,15 @@ const createPoll = message => {
 };
 
 const createResponse = poll => {
-  return `Poll: ${poll.name}${poll.options
+  return `Poll: ${poll.name}\n${poll.options
     .map(option => `:${option.reaction}:: ${option.text}`)
-    .reduce((a, b) => a + '\n' + b, '')}`;
+    .join('\n')}`;
 };
 
 module.exports = robot => {
   robot.respond(/poll/i, msg => {
     const poll = createPoll(msg.message.text);
-    if (poll.name) {
+    if (poll.name && poll.options.length >= 2) {
       const response = createResponse(poll);
       robot.adapter.client.web.chat
         .postMessage(msg.message.room, response)
