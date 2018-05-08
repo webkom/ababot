@@ -11,16 +11,13 @@
   },
   "dependencies": {
     "hubot": "2.19.0",
-    "hubot-diagnostics": "0.0.1",
-    "hubot-help": "0.2.0",
-    "hubot-redis-brain": "0.0.3",
-    "hubot-slack": "4.2.2",
+    "hubot-diagnostics": "0.0.2",
+    "hubot-help": "^0.2.2",
+    "hubot-redis-brain": "0.0.4",
+    "hubot-slack": "^4.4.0",
     "lodash": "^4.17.3",
-    "moment": "^2.17.1",
-    "node-fetch": "^1.6.3"
-  },
-  "engines": {
-    "node": "8.x.x"
+    "moment": "^2.22.1",
+    "node-fetch": "^2.1.2"
   },
   "prettier": {
     "singleQuote": true
