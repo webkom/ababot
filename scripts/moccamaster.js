@@ -8,6 +8,7 @@ const token = process.env.MOCCAMASTER_TOKEN;
 const coffeeChannel = process.env.MOCCAMASTER_CHANNEL || '#kaffebot';
 const moment = require('moment');
 const log = console.log;
+moment.locale('nb-NO');
 
 module.exports = robot => {
   robot.router.post('/moccamaster', (request, response) => {
