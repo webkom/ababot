@@ -20,7 +20,7 @@ const createMention = username => `@${username}`;
 module.exports = robot => {
   robot.hear(/@noen/i, msg => {
     // Reply with a cheesy message and a random picked mention.
-    members()
+    members('?active=true')
       .then(members => {
         if (!members.length) {
           return;
