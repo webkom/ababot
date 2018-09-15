@@ -20,7 +20,7 @@ module.exports = robot => {
                         presence_device.info.last_seen.toDate().getTime()) /
                         1000
                     ) >
-                      60 * 10
+                      60 * 15
                   ) {
                     return false;
                   }
