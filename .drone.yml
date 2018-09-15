@@ -4,6 +4,7 @@ pipeline:
     when:
       event: push
     commands:
+      - npm install --build-from-source node-zopfli
       - yarn
       - yarn lint
   docker:
