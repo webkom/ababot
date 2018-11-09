@@ -18,6 +18,21 @@ const prefixes = [
 const createMention = username => `@${username}`;
 
 module.exports = robot => {
+  robot.hear(/@noen-nye/i, msg => {
+    members('?new=true')
+      .then(members => {
+        if (!members.length) {
+          return;
+        }
+
+        const luckyMember = _.sample(members);
+        const mention = createMention(luckyMember.slack);
+        const cheesyPrefix = _.sample(prefixes);
+        msg.send(`${cheesyPrefix} ${mention}`);
+      })
+      .catch(error => msg.send(error.message));
+  });
+
   robot.hear(/@noen/i, msg => {
     // Reply with a cheesy message and a random picked mention.
     members('?active=true')
