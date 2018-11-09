@@ -10,6 +10,7 @@
     "prettier": "prettier '**/*.js' --write"
   },
   "dependencies": {
+    "node-pre-gyp": "0.11.0",
     "firebase-admin": "6.0.0",
     "hubot": "2.19.0",
     "hubot-diagnostics": "0.0.2",
