@@ -4,8 +4,8 @@ pipeline:
     when:
       event: push
     commands:
-      - yarn
-      - yarn lint
+      - npm install
+      - npm run lint
   docker:
     image: plugins/docker
     when:
