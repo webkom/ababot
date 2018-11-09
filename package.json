@@ -10,7 +10,6 @@
     "prettier": "prettier '**/*.js' --write"
   },
   "dependencies": {
-    "node-pre-gyp": "0.11.0",
     "firebase-admin": "6.0.0",
     "hubot": "2.19.0",
     "hubot-diagnostics": "0.0.2",
@@ -19,12 +18,13 @@
     "hubot-slack": "^4.4.0",
     "lodash": "^4.17.3",
     "moment": "^2.22.1",
-    "node-fetch": "^2.1.2"
+    "node-fetch": "^2.1.2",
+    "node-pre-gyp": "0.11.0"
   },
   "prettier": {
     "singleQuote": true
   },
   "devDependencies": {
-    "prettier": "^1.12.1"
+    "prettier": "1.12.1"
   }
 }
