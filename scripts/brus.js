@@ -42,6 +42,30 @@ function getSodaName(slackName) {
   });
 }
 
+function purchaseSoda(slackName, sodaType) {
+  return getSodaName(username).then(name => {
+    return brus(`/purchase_${sodaType}/`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name
+      })
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Jeg klarte ikke å kjøpe brusen');
+        }
+
+        return response.json();
+      })
+      .then(
+        body =>
+          `Du fikk kjøpt en brus ${sodaType == 'bottle' ? 'flaske' : 'boks'}, ${
+            body.name
+          } sin nye saldo er ${body.balance}`
+      );
+  });
+}
+
 module.exports = robot => {
   robot.respond(/kjøp øl/i, msg => {
     robot.adapter.client.web.reactions.add('beer', {
@@ -57,31 +81,16 @@ module.exports = robot => {
     });
   });
 
-  robot.respond(/kjøp brus/i, msg => {
+  robot.respond(/kjøp brus flaske/i, msg => {
     const send = msg.send.bind(msg);
+    purchaseSoda(msg.message.user.name, 'bottle')
+      .then(send)
+      .catch(error => send(error.message));
+  });
 
-    getSodaName(msg.message.user.name)
-      .then(name => {
-        return brus('/purchase/', {
-          method: 'POST',
-          body: JSON.stringify({
-            name
-          })
-        })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Jeg klarte ikke å kjøpe brusen');
-            }
-
-            return response.json();
-          })
-          .then(
-            body =>
-              `Du fikk kjøpt en brus, ${body.name} sin nye saldo er ${
-                body.balance
-              }`
-          );
-      })
+  robot.respond(/kjøp brus boks/i, msg => {
+    const send = msg.send.bind(msg);
+    purchaseSoda(msg.message.user.name, 'can')
       .then(send)
       .catch(error => send(error.message));
   });
