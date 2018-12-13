@@ -43,7 +43,7 @@ function getSodaName(slackName) {
 }
 
 function purchaseSoda(slackName, sodaType) {
-  return getSodaName(username).then(name => {
+  return getSodaName(slackName).then(name => {
     return brus(`/purchase_${sodaType}/`, {
       method: 'POST',
       body: JSON.stringify({
