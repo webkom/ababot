@@ -61,7 +61,7 @@ function purchaseSoda(slackName, sodaType) {
         body =>
           `Du fikk kjøpt en brus ${sodaType == 'bottle' ? 'flaske' : 'boks'}, ${
             body.name
-          } sin nye saldo er ${body.balance}. ${body.name} har kjøpt ${
+          } sin nye saldo er ${body.balance}. ${body.name} har kjøpt totalt ${
             body.soda_bottles_bought
           } flasker og ${body.soda_cans_bought} bokser brus.`
       );
