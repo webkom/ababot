@@ -61,7 +61,9 @@ function purchaseSoda(slackName, sodaType) {
         body =>
           `Du fikk kjøpt en brus ${sodaType == 'bottle' ? 'flaske' : 'boks'}, ${
             body.name
-          } sin nye saldo er ${body.balance}`
+          } sin nye saldo er ${body.balance}. ${body.name} har kjøpt ${
+            body.soda_bottles_bought
+          } flasker og ${body.soda_cans_bought} bokser brus.`
       );
   });
 }
@@ -113,7 +115,14 @@ module.exports = robot => {
 
             return response.json();
           })
-          .then(body => `${body.name} sin saldo er ${body.balance} spenn.`);
+          .then(
+            body =>
+              `${body.name} sin saldo er ${body.balance} spenn. ${
+                body.name
+              } har kjøpt totalt ${body.soda_bottles_bought} flasker og ${
+                body.soda_cans_bought
+              } bokser brus.`
+          );
       })
       .then(send)
       .catch(error => send(error.message));
