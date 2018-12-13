@@ -49,22 +49,13 @@ function purchaseSoda(slackName, sodaType) {
       body: JSON.stringify({
         name
       })
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Jeg klarte ikke å kjøpe brusen');
-        }
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error('Jeg klarte ikke å kjøpe brusen');
+      }
 
-        return response.json();
-      })
-      .then(
-        body =>
-          `Du fikk kjøpt en brus ${sodaType == 'bottle' ? 'flaske' : 'boks'}, ${
-            body.name
-          } sin nye saldo er ${body.balance}. ${body.name} har kjøpt totalt ${
-            body.soda_bottles_bought
-          } flasker og ${body.soda_cans_bought} bokser brus.`
-      );
+      return response.json();
+    });
   });
 }
 
@@ -85,16 +76,16 @@ module.exports = robot => {
 
   robot.respond(/kjøp brus flaske/i, msg => {
     const send = msg.send.bind(msg);
-    purchaseSoda(msg.message.user.name, 'bottle')
-      .then(send)
-      .catch(error => send(error.message));
+    purchaseSoda(msg.message.user.name, 'bottle').catch(error =>
+      send(error.message)
+    );
   });
 
   robot.respond(/kjøp brus boks/i, msg => {
     const send = msg.send.bind(msg);
-    purchaseSoda(msg.message.user.name, 'can')
-      .then(send)
-      .catch(error => send(error.message));
+    purchaseSoda(msg.message.user.name, 'can').catch(error =>
+      send(error.message)
+    );
   });
 
   robot.respond(/saldo brus( .*)?/i, msg => {
