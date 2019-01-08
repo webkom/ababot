@@ -7,8 +7,11 @@ module.exports = robot => {
   robot.hear(/@kontoret|@office/i, msg => {
     // Reply with a message containing mentions of members at the office.
     presence()
-      .then(members => {
+      .then(presence => {
+        const members = presence.members;
+
         if (members.length === 0) {
+          msg.send('Ingen på kontoret akkurat nå :white_frowning_face:');
           return;
         }
 
