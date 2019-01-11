@@ -74,14 +74,14 @@ module.exports = robot => {
     });
   });
 
-  robot.respond(/kjøp brus flaske/i, msg => {
+  robot.respond(/kjøp flaske/i, msg => {
     const send = msg.send.bind(msg);
     purchaseSoda(msg.message.user.name, 'bottle').catch(error =>
       send(error.message)
     );
   });
 
-  robot.respond(/kjøp brus boks/i, msg => {
+  robot.respond(/kjøp boks/i, msg => {
     const send = msg.send.bind(msg);
     purchaseSoda(msg.message.user.name, 'can').catch(error =>
       send(error.message)
