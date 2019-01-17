@@ -15,7 +15,7 @@ module.exports = robot => {
           members
             .map(
               m =>
-                `*${m.name.padStart(10, ' ')}*:${'\t'} ${m.phone_number.substr(
+                `*${m.name}*:${'\t'} ${m.phone_number.substr(
                   0,
                   3
                 )} ${m.phone_number
