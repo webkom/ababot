@@ -21,7 +21,7 @@ module.exports = robot => {
                 )} ${m.phone_number
                   .substr(3)
                   .match(/.{1,2}/g)
-                  .join(' ')}`
+                  .join(' ').padStart(10, ' ')}`
             )
             .sort()
             .join('\n')
