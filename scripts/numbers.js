@@ -11,7 +11,7 @@ module.exports = robot => {
         if (members.length === 0) {
           return;
         }
-        msg.send(members.map(m => `${m.name}: ${m.phone_number}\n`));
+        msg.send(members.map(m => `${m.name}: ${m.phone_number}`).join('\n'));
       })
       .catch(error => msg.send(error.message));
   });
