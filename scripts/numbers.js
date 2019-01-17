@@ -14,9 +14,11 @@ module.exports = robot => {
         msg.send(
           members
             .map(
-              m => `*${m.name}*:${'\t'}
-            ${m.phone_number.substr(0, 3)}
-            ${m.phone_number.substr(3).match(/.{1,2}/g)}`
+              m =>
+                `*${m.name}*:${'\t'} ${m.phone_number.substr(
+                  0,
+                  3
+                )} ${m.phone_number.substr(3).match(/.{1,2}/g)}`
             )
             .sort()
             .join('\n')
