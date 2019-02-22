@@ -5,7 +5,7 @@ const _ = require('lodash');
 const members = require('../lib/members');
 
 module.exports = robot => {
-  robot.hear(/nummer/i, msg => {
+  robot.respond(/nummer/i, msg => {
     members('?active=true')
       .then(members => {
         if (members.length === 0) {
