@@ -2,7 +2,7 @@ const _ = require('lodash');
 const officeDoor = require('../lib/office_door');
 
 module.exports = robot => {
-  robot.hear(/door/i, msg => {
+  robot.respond(/door/i, msg => {
     // Reply with the status of the door
     officeDoor()
       .then(door => {
