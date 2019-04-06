@@ -6,11 +6,12 @@ module.exports = robot => {
     // Reply with the status of the door
     officeDoor()
       .then(door => {
-        // TODO: Change from isoformat to time since?
         const date = new Date(door.last_datetime);
         const doorStatus = door.status == 'OPEN' ? 'ÅPEN' : 'LUKKET';
         msg.send(
-          '[' + date.toUTCString() + ' ] - Døren på kontoret er ' + doorStatus
+          date.toLocaleString('en-US', (options = { hour12: false })) +
+            ' - Døren på kontoret er ' +
+            doorStatus
         );
       })
       .catch(error => msg.send(error.message));
