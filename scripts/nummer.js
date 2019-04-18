@@ -1,6 +1,8 @@
 // Description:
-//   Pick and tag a random user that has to do shitty work, replies when the bot
-//   hears @noen. This script also supports mentions of @aktive and @nye.
+//   Display the numbers of the active pool
+//
+// Commands
+//   hubot nummber - Reply with name/number of all active members
 
 const _ = require('lodash');
 const members = require('../lib/members');

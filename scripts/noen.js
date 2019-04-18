@@ -1,6 +1,10 @@
 // Description:
-//   Pick and tag a random user that has to do shitty work, replies when the bot
-//   hears @noen. This script also supports mentions of @aktive and @nye.
+//   Pick and tag a random user
+//
+// Commands
+//  @noen - Pick a random person from the active pool
+//  @nye - Tag all new members
+//  @active - Tagg all active memebers
 
 const _ = require('lodash');
 const members = require('../lib/members');

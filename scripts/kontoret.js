@@ -1,3 +1,9 @@
+// Description:
+//   Check who's at the office
+//
+// Commands
+//   @kontoret / @office - Reply with everyone at the office
+
 const _ = require('lodash');
 const presence = require('../lib/presence');
 

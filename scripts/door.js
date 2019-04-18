@@ -1,3 +1,9 @@
+// Description:
+//   Check the door status
+//
+// Commands
+//   hubot door - Reply with the door status
+
 const _ = require('lodash');
 const officeDoor = require('../lib/office_door');
 

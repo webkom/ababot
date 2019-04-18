@@ -1,5 +1,6 @@
 // Description:
 //   Create poll
+//
 // Commands
 //   hubot poll "<pollName>" "<option0>" "<option1>" "<option2>" ... - Create and post poll with given options
 //   hubot poll\n<pollName>\n<option0>\n<option1>... - Create poll with new lines instead of quotation marks
@@ -31,15 +32,14 @@ module.exports = robot => {
   robot.respond(/poll/i, msg => {
     robot.adapter.client.web.emoji
       .list()
-      .then(
-        r =>
-          r.ok
-            ? _.shuffle(
-                Object.keys(r.emoji).filter(
-                  emoji => !r.emoji[emoji].startsWith('alias:')
-                )
+      .then(r =>
+        r.ok
+          ? _.shuffle(
+              Object.keys(r.emoji).filter(
+                emoji => !r.emoji[emoji].startsWith('alias:')
               )
-            : []
+            )
+          : []
       )
       .then(reactionPool => {
         const poll = createPoll(msg.message.text, reactionPool);
