@@ -1,5 +1,5 @@
 // Description:
-//   Show Abakus coffee status
+//   Show Webkom coffee status
 //
 // Commands:
 // hubot kaffe - Replay with information about the coffee brewer at the webkom-office.

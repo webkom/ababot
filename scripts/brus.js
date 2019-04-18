@@ -1,12 +1,15 @@
 // Description:
 //   Buy soda or list balance
+//
 // Configuration:
 //   SODA_TOKEN,
 //   SODA_URL,
 //   MEMBERS_URL
+//
 // Commands
-//   hubot kjøp brus <name> - Buy a soda at the office.
-//   hubot saldo brus <name> - Get your saldo at brus.abakus.no
+//   hubot kjøp brus flaske - Purchase a bottle of soda (0.5)
+//   hubot kjøp brus boks - Purchase a can of soda (0.33)
+//   hubot saldo brus - Get your balance brus.abakus.no
 
 const _ = require('lodash');
 const fetch = require('node-fetch');

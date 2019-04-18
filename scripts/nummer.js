@@ -1,5 +1,8 @@
 // Description:
-// Get all phone numbers for active members
+//   Display the numbers of the active pool
+//
+// Commands
+//   hubot nummber - Reply with name/number of all active members
 
 const _ = require('lodash');
 const members = require('../lib/members');
