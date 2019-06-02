@@ -44,7 +44,7 @@ module.exports = robot => {
   });
   robot.respond(/couch unlock/i, msg => {
     const send = msg.send.bind(msg);
-    sendCommand('power_lock').catch(error => send(error.message));
+    sendCommand('power_unlock').catch(error => send(error.message));
   });
 
   robot.respond(/couch (red|green|yellow|blue|magenta|cyan)/i, msg => {
