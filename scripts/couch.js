@@ -5,6 +5,8 @@
 // Commands
 //   hubot couch on - Turn on the LED strip
 //   hubot couch off - Turn off the LED strip
+//   hubot couch lock - Lock the power state of the LED strip so it cannot be changed by member presence
+//   hubot couch unlock - Unlock the power state of the LED strip so it can be changed by member presence
 //   hubot couch red|green|yellow|blue|magenta|cyan - Change the color of the LED strip
 
 const _ = require('lodash');
@@ -35,6 +37,14 @@ module.exports = robot => {
   robot.respond(/couch on/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('power_on').catch(error => send(error.message));
+  });
+  robot.respond(/couch lock/i, msg => {
+    const send = msg.send.bind(msg);
+    sendCommand('power_lock').catch(error => send(error.message));
+  });
+  robot.respond(/couch unlock/i, msg => {
+    const send = msg.send.bind(msg);
+    sendCommand('power_lock').catch(error => send(error.message));
   });
 
   robot.respond(/couch (red|green|yellow|blue|magenta|cyan)/i, msg => {
