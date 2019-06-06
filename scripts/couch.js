@@ -32,11 +32,11 @@ function sendCommand(command, color = null) {
 module.exports = robot => {
   robot.respond(/couch off/i, msg => {
     const send = msg.send.bind(msg);
-    sendCommand('power_off').catch(error => send(error.message));
+    sendCommand('force_power_off').catch(error => send(error.message));
   });
   robot.respond(/couch on/i, msg => {
     const send = msg.send.bind(msg);
-    sendCommand('power_on').catch(error => send(error.message));
+    sendCommand('force_power_on').catch(error => send(error.message));
   });
   robot.respond(/couch lock/i, msg => {
     const send = msg.send.bind(msg);
