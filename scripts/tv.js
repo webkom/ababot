@@ -3,8 +3,6 @@
 // Configuration:
 //   OPENFAAS_URL,
 // Commands
-//   hubot tv on - Turn on the TV
-//   hubot tv off - Turn off the TV
 //   hubot tv pause - Pause whatever is playing on the TV
 //   hubot tv play - Start playing (again)
 //   hubot tv mute - Mute the TV
@@ -34,14 +32,6 @@ function sendCommand(command, volume = null) {
 }
 
 module.exports = robot => {
-  robot.respond(/tv on/i, msg => {
-    const send = msg.send.bind(msg);
-    sendCommand('power_on').catch(error => send(error.message));
-  });
-  robot.respond(/tv off/i, msg => {
-    const send = msg.send.bind(msg);
-    sendCommand('power_off').catch(error => send(error.message));
-  });
   robot.respond(/tv pause/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('pause').catch(error => send(error.message));
