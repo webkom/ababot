@@ -59,6 +59,9 @@ module.exports = robot => {
 
   robot.respond(/tv (?:100|[1-9]?[0-9])/i, msg => {
     const send = msg.send.bind(msg);
+    if (msg.match[1] === undefined) {
+      return;
+    }
     let volume = msg.match[1].trim();
     let parsedVolume = parseInt(volume);
     if (isNaN(parsedVolume)) {
