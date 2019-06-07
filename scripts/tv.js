@@ -9,20 +9,19 @@
 //   hubot tv unmute - Unmute the TV
 //   hubot tv next - Play the next item (song/video) in the list
 //   hubot tv previous - Play the previous item (song/video) in the list
+//   hubot tv <url|youtube_url> - If URL is a Youtube Video, play the video, else Cast the URL to the Chromecast
 //   hubot tv 0-100 - Change the volume of the TV (0% to 100%)
 
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const openFaas = require('../lib/openfaas');
 
-function sendCommand(command, volume = null) {
-  payload = {
-    command
-  };
-  if (volume !== null) {
-    payload['volume'] = volume;
-  }
+// Django regex for URLs
+const regexUrlCommand = /tv (.*(?:http|ftp)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[\/?]\S+).*)/i;
+const regexYoutube = /.*(youtu.be\/|youtube(-nocookie)?.com\/(v\/|.*u\/\w\/|embed\/|.*v=))([\w-]{11}).*/i;
 
+function sendCommand(command, additional = {}) {
+  const payload = { ...additional, command };
   return openFaas('office-chromecast-api', {
     method: 'POST',
     body: JSON.stringify(payload)
@@ -56,6 +55,28 @@ module.exports = robot => {
     const send = msg.send.bind(msg);
     sendCommand('previous').catch(error => send(error.message));
   });
+  robot.respond(regexUrlCommand, msg => {
+    const send = msg.send.bind(msg);
+    if (msg.match[1] === undefined) {
+      return;
+    }
+    const url = msg.match[1].trim();
+    const youtubeMatch = url.match(regexYoutube);
+    let command = 'cast';
+    // Check if the URL is a YouTube URL
+    if (youtubeMatch !== null) {
+      const video_id = youtubeMatch[4];
+      // Check if the YouTube is in fact a Video, ignore it otherwise
+      if (video_id === undefined || video_id.trim() === '') {
+        // Maybe cast it as a normal website instead of ignoring?
+        return;
+      }
+      command = 'youtube';
+    }
+    sendCommand(command, {
+      url
+    }).catch(error => send(error.message));
+  });
   robot.respond(/tv (\d{0,3})/i, msg => {
     const send = msg.send.bind(msg);
     if (msg.match[1] === undefined) {
@@ -72,6 +93,8 @@ module.exports = robot => {
     } else if (parsedVolume < 0) {
       parsedVolume = 0;
     }
-    sendCommand('set_volume', parsedVolume).catch(error => send(error.message));
+    sendCommand('set_volume', {
+      volume: parsedVolume
+    }).catch(error => send(error.message));
   });
 };
