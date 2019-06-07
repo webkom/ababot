@@ -56,8 +56,7 @@ module.exports = robot => {
     const send = msg.send.bind(msg);
     sendCommand('previous').catch(error => send(error.message));
   });
-
-  robot.respond(/tv (?:100|[1-9]?[0-9])/i, msg => {
+  robot.respond(/tv (\d{0,3})/i, msg => {
     const send = msg.send.bind(msg);
     if (msg.match[1] === undefined) {
       return;
