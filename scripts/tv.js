@@ -57,13 +57,13 @@ module.exports = robot => {
     sendCommand('previous').catch(error => send(error.message));
   });
 
-  // Alternative: /tv (?:100|[1-9]?[0-9])/i, but 251 -> 25
-  robot.respond(/tv (\d{0,3})/i, msg => {
+  robot.respond(/tv (?:100|[1-9]?[0-9])/i, msg => {
     const send = msg.send.bind(msg);
     let volume = msg.match[1].trim();
     let parsedVolume = parseInt(volume);
     if (isNaN(parsedVolume)) {
-      return send(`'${volume}' er ikke et gyldig tall mellom 0 og 100`);
+      // Ignore the int as it's not a number
+      return;
     }
     if (parsedVolume > 100) {
       parsedVolume = 100;
