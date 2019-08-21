@@ -7,8 +7,8 @@
 //   MEMBERS_URL
 //
 // Commands
-//   hubot kjøp brus flaske - Purchase a bottle of soda (0.5)
-//   hubot kjøp brus boks - Purchase a can of soda (0.33)
+//   hubot kjøp <produkt_navn> - Purchase a product from Brus
+//   hubot brus produkter - Get a list of products from brus.abakus.no
 //   hubot saldo brus - Get your balance brus.abakus.no
 
 const _ = require('lodash');
@@ -44,17 +44,45 @@ function getSodaName(slackName) {
     return user.brus;
   });
 }
+function getProducts() {
+  return brus(`/products/`, {
+    method: 'GET'
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Jeg klarte ikke hente produktene fra brus`);
+      }
+      return response.json();
+    })
+    .then(body => {
+      return body
+        .map(product => `- \`${product.key}\`: ${product.current_price} kr`)
+        .join('\n');
+    });
+}
 
 function purchaseSoda(slackName, sodaType) {
   return getSodaName(slackName).then(name => {
-    return brus(`/purchase_${sodaType}/`, {
+    return brus(`/purchase/`, {
       method: 'POST',
       body: JSON.stringify({
-        name
+        name,
+        shopping_cart: [
+          {
+            product_name: sodaType,
+            count: 1
+          }
+        ]
       })
     }).then(response => {
       if (!response.ok) {
-        throw new Error('Jeg klarte ikke å kjøpe brusen');
+        if (response.status === 404) {
+          throw new Error(
+            `Jeg klarte ikke å kjøpe brusen: fant ikke noe produkt med navnet \`${sodaType}\`\nSkriv \`hubot brus produkter\` for å se listen`
+          );
+        } else {
+          throw new Error(`Jeg klarte ikke å kjøpe brusen: ${response.status}`);
+        }
       }
 
       return response.json();
@@ -63,32 +91,19 @@ function purchaseSoda(slackName, sodaType) {
 }
 
 module.exports = robot => {
-  robot.respond(/kjøp øl/i, msg => {
-    robot.adapter.client.web.reactions.add('beer', {
-      channel: msg.message.room,
-      timestamp: msg.message.id
-    });
-  });
-
-  robot.respond(/kjøp shot/i, msg => {
-    robot.adapter.client.web.reactions.add('cocktail', {
-      channel: msg.message.room,
-      timestamp: msg.message.id
-    });
-  });
-
-  robot.respond(/kjøp flaske/i, msg => {
+  robot.respond(/kjøp (.*)?/i, msg => {
     const send = msg.send.bind(msg);
-    purchaseSoda(msg.message.user.name, 'bottle').catch(error =>
+    const productName = msg.match[1].trim();
+    purchaseSoda(msg.message.user.name, productName).catch(error =>
       send(error.message)
     );
   });
 
-  robot.respond(/kjøp boks/i, msg => {
+  robot.respond(/brus produkter/i, msg => {
     const send = msg.send.bind(msg);
-    purchaseSoda(msg.message.user.name, 'can').catch(error =>
-      send(error.message)
-    );
+    getProducts()
+      .then(send)
+      .catch(error => send(error.message));
   });
 
   robot.respond(/saldo brus( .*)?/i, msg => {
@@ -110,12 +125,11 @@ module.exports = robot => {
             return response.json();
           })
           .then(
+            // TODO: list products
             body =>
-              `${body.name} sin saldo er ${body.balance} spenn. ${
-                body.name
-              } har kjøpt totalt ${body.soda_bottles_bought} flasker og ${
-                body.soda_cans_bought
-              } bokser brus.`
+              `${body.name} sin saldo er ${
+                body.balance
+              } spenn. (TODO: produktliste, @noen fix)`
           );
       })
       .then(send)
