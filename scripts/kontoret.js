@@ -16,16 +16,15 @@ module.exports = robot => {
       .then(presence => {
         const members = presence.members;
 
-        if (members.length === 0) {
+        const presentMembers = members.filter(member => member.is_active);
+
+        if (presentMembers.length === 0) {
           msg.send('Ingen på kontoret akkurat nå :white_frowning_face:');
           return;
         }
 
         msg.send(
-          members
-            .filter(member => member.is_active)
-            .map(member => createMention(member.slack))
-            .join(', ')
+          presentMembers.map(member => createMention(member.slack)).join(', ')
         );
       })
       .catch(error => msg.send(error.message));
