@@ -9,6 +9,20 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const members = require('../lib/members');
+const mqtt = require('mqtt');
+
+const client = mqtt.connect('mqtt://mqtt.abakus.no', {
+  username: 'odinugedal',
+  password: ''
+});
+
+client.on('connect', function() {
+  client.subscribe('office-say/command', function(err) {
+    if (!err) {
+      client.publish('office-say/command', 'Hello mqtt');
+    }
+  });
+});
 
 function sendCommand(command, text = null, voice_nr = null) {
   payload = {
@@ -21,12 +35,8 @@ function sendCommand(command, text = null, voice_nr = null) {
     payload['text'] = text;
   }
 
-  return openFaas('office-say-api', {
-    method: 'POST',
-    body: JSON.stringify(payload)
-  }).then(response => {
-    return;
-  });
+  console.log('Sending payload: ' + JSON.stringify(payload));
+  return client.publish('office-say/command', JSON.stringify(payload));
 }
 
 module.exports = robot => {
