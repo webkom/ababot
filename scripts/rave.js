@@ -11,6 +11,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const openFaas = require('../lib/openfaas');
+const mqttClient = require('../lib/mqtt_client');
 
 function sendCommand(command) {
   payload = {
@@ -33,6 +34,13 @@ module.exports = robot => {
   robot.respond(/rave on/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('force_power_on').catch(error => send(error.message));
+
+    const voiceCommand = {
+      command: 'say',
+      text: 'nu kör vi',
+      voice_name: 'swedish'
+    };
+    mqttClient().publish('office_say/command', JSON.stringify(voiceCommand));
   });
   robot.respond(/rave lock/i, msg => {
     const send = msg.send.bind(msg);

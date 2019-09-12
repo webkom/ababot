@@ -3,101 +3,137 @@
 //
 // Commands
 //   hubot say <text> - Synthesize <text> on the office speakers!
-//   hubot say <text> <voice_nr> - Synthesize <text> with chosen voice synthesizer
+//   hubot say <text> <voice_name> - Synthesize <text> with chosen voice synthesizer
 //   hubot voices - Display a list of available voices
 
 const _ = require('lodash');
 const fetch = require('node-fetch');
-const mqtt = require('mqtt');
+const mqttClient = require('../lib/mqtt_client');
 
-const { MQTT_USER, MQTT_PASS } = process.env;
+const voices = {
+  af: 'Afrikaans',
+  ar: 'Arabic',
+  bn: 'Bengali',
+  bs: 'Bosnian',
+  ca: 'Catalan',
+  cs: 'Czech',
+  cy: 'Welsh',
+  da: 'Danish',
+  de: 'German',
+  el: 'Greek',
+  en: 'English',
+  'en-au': 'English (Australia)',
+  'en-ca': 'English (Canada)',
+  'en-gb': 'English (UK)',
+  'en-gh': 'English (Ghana)',
+  'en-ie': 'English (Ireland)',
+  'en-in': 'English (India)',
+  'en-ng': 'English (Nigeria)',
+  'en-nz': 'English (New Zealand)',
+  'en-ph': 'English (Philippines)',
+  'en-tz': 'English (Tanzania)',
+  'en-uk': 'English (UK)',
+  'en-us': 'English (US)',
+  'en-za': 'English (South Africa)',
+  eo: 'Esperanto',
+  es: 'Spanish',
+  'es-es': 'Spanish (Spain)',
+  'es-us': 'Spanish (United States)',
+  et: 'Estonian',
+  fi: 'Finnish',
+  fr: 'French',
+  'fr-ca': 'French (Canada)',
+  'fr-fr': 'French (France)',
+  gu: 'Gujarati',
+  hi: 'Hindi',
+  hr: 'Croatian',
+  hu: 'Hungarian',
+  hy: 'Armenian',
+  id: 'Indonesian',
+  is: 'Icelandic',
+  it: 'Italian',
+  ja: 'Japanese',
+  jw: 'Javanese',
+  km: 'Khmer',
+  kn: 'Kannada',
+  ko: 'Korean',
+  la: 'Latin',
+  lv: 'Latvian',
+  mk: 'Macedonian',
+  ml: 'Malayalam',
+  mr: 'Marathi',
+  my: 'Myanmar (Burmese)',
+  ne: 'Nepali',
+  nl: 'Dutch',
+  no: 'Norwegian',
+  pl: 'Polish',
+  pt: 'Portuguese',
+  'pt-br': 'Portuguese (Brazil)',
+  'pt-pt': 'Portuguese (Portugal)',
+  ro: 'Romanian',
+  ru: 'Russian',
+  si: 'Sinhala',
+  sk: 'Slovak',
+  sq: 'Albanian',
+  sr: 'Serbian',
+  su: 'Sundanese',
+  sv: 'Swedish',
+  sw: 'Swahili',
+  ta: 'Tamil',
+  te: 'Telugu',
+  th: 'Thai',
+  tl: 'Filipino',
+  tr: 'Turkish',
+  uk: 'Ukrainian',
+  ur: 'Urdu',
+  vi: 'Vietnamese',
+  'zh-cn': 'Chinese (Mandarin/China)',
+  'zh-tw': 'Chinese (Mandarin/Taiwan)'
+};
 
-const client = mqtt.connect('mqtt://mqtt.abakus.no', {
-  username: MQTT_USER,
-  password: MQTT_PASS
-});
+const isVoiceName = voiceName =>
+  Object.keys(voices).find(voice => voice == voiceName) !== undefined;
 
-function sendCommand(command, text = null, voice_nr = null) {
+function sendCommand(command, text = null, voiceName = null) {
   let payload = {
     command
   };
-  if (voice_nr !== null) {
-    payload['voice_nr'] = voice_nr;
+  if (voiceName !== null) {
+    payload['voice_name'] = voiceName;
   }
   if (text !== null) {
     payload['text'] = text;
   }
 
-  return client.publish('office_say/command', JSON.stringify(payload));
+  const client = mqttClient();
+  client.publish('office_say/command', JSON.stringify(payload));
 }
 
 module.exports = robot => {
-  robot.respond(/say (.*)? (.*)?/i, msg => {
+  robot.respond(/say (.*)?/i, msg => {
     const send = msg.send.bind(msg);
     let text = msg.match[1] && msg.match[1].trim();
-    let voice_nr = msg.match[2] && msg.match[2].trim();
 
-    // If the last argument wasn't a number, interpret that as voice_nr not
-    // being provided
-    if (voice_nr !== 'random' && isNaN(voice_nr)) {
-      text = text + ' ' + voice_nr;
-      voice_nr = null;
+    let voiceName = text
+      .split(' ')
+      .splice(-1)[0]
+      .toLowerCase();
+
+    if (voiceName !== 'random' && !isVoiceName(voiceName)) {
+      voiceName = null;
+    } else {
+      var lastIndex = text.lastIndexOf(' ');
+      text = text.substring(0, lastIndex);
     }
-    sendCommand('say', text, voice_nr);
+
+    sendCommand('say', text, voiceName);
   });
 
   robot.respond(/voices/i, msg => {
-    const voices = `voice nr 0: en_US (Alex)
-    voice nr 1: it_IT (Alice)
-    voice nr 2: sv_SE (Alva)
-    voice nr 3: fr_CA (Amelie)
-    voice nr 4: de_DE (Anna)
-    voice nr 5: he_IL (Carmit)
-    voice nr 6: id_ID (Damayanti)
-    voice nr 7: en_GB (Daniel)
-    voice nr 8: es_AR (Diego)
-    voice nr 9: nl_BE (Ellen)
-    voice nr 10: en-scotland (Fiona)
-    voice nr 11: en_US (Fred)
-    voice nr 12: ro_RO (Ioana)
-    voice nr 13: pt_PT (Joana)
-    voice nr 14: es_ES (Jorge)
-    voice nr 15: es_MX (Juan)
-    voice nr 16: th_TH (Kanya)
-    voice nr 17: en_AU (Karen)
-    voice nr 18: ja_JP (Kyoko)
-    voice nr 19: sk_SK (Laura)
-    voice nr 20: hi_IN (Lekha)
-    voice nr 21: it_IT (Luca)
-    voice nr 22: pt_BR (Luciana)
-    voice nr 23: ar_SA (Maged)
-    voice nr 24: hu_HU (Mariska)
-    voice nr 25: zh_TW (Mei-Jia)
-    voice nr 26: el_GR (Melina)
-    voice nr 27: ru_RU (Milena)
-    voice nr 28: en_IE (Moira)
-    voice nr 29: es_ES (Monica)
-    voice nr 30: nb_NO (Nora)
-    voice nr 31: es_MX (Paulina)
-    voice nr 32: en_US (Samantha)
-    voice nr 33: da_DK (Sara)
-    voice nr 34: fi_FI (Satu)
-    voice nr 35: zh_HK (Sin-ji)
-    voice nr 36: en_ZA (Tessa)
-    voice nr 37: fr_FR (Thomas)
-    voice nr 38: zh_CN (Ting-Ting)
-    voice nr 39: en_IN (Veena)
-    voice nr 40: en_US (Victoria)
-    voice nr 41: nl_NL (Xander)
-    voice nr 42: tr_TR (Yelda)
-    voice nr 43: ko_KR (Yuna)
-    voice nr 44: ru_RU (Yuri)
-    voice nr 45: pl_PL (Zosia)
-    voice nr 46: cs_CZ (Zuzana)
-
-    Engelske stemmer: [0, 7, 10, 11, 17, 28, 32, 36, 40]
-    Norske stemmer: [30]
-    `;
-    msg.send(voices);
+    let formattedVoices = '';
+    for (key in voices) {
+      formattedVoices += key + ': ' + voices[key] + '\n';
+    }
+    msg.send(formattedVoices);
   });
 };
