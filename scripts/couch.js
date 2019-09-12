@@ -33,23 +33,43 @@ module.exports = robot => {
   robot.respond(/couch off/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('force_power_off').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('mobile_phone_off', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/couch on/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('force_power_on').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('bulb', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/couch lock/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('power_lock').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('lock', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/couch unlock/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('power_unlock').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('unlock', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
 
   robot.respond(/couch (red|green|yellow|orange|blue|magenta|cyan)/i, msg => {
     const send = msg.send.bind(msg);
     const color = msg.match[1].trim();
     sendCommand('set_color', color).catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('sparkles', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
 };

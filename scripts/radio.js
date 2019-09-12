@@ -98,5 +98,9 @@ module.exports = robot => {
     const station = stations.find(station => station.id == stationId);
 
     playRadioStation(station);
+    robot.adapter.client.web.reactions.add('radio', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
 };

@@ -126,6 +126,10 @@ module.exports = robot => {
     }
 
     sendCommand('say', text, voiceName);
+    robot.adapter.client.web.reactions.add('speaking_head_in_silhouette', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
 
   robot.respond(/voices/i, msg => {

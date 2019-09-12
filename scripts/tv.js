@@ -34,26 +34,56 @@ module.exports = robot => {
   robot.respond(/tv pause/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('pause').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('double_vertical_bar', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/tv play/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('play').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('arrow_forward', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/tv mute/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('mute').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('mute', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/tv unmute/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('unmute').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('speaker', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/tv next/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('next').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add(
+      'black_right_pointing_double_triangle_with_vertical_bar',
+      {
+        channel: msg.message.room,
+        timestamp: msg.message.id
+      }
+    );
   });
   robot.respond(/tv previous/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('previous').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add(
+      'black_left_pointing_double_triangle_with_vertical_bar',
+      {
+        channel: msg.message.room,
+        timestamp: msg.message.id
+      }
+    );
   });
   robot.respond(regexUrlCommand, msg => {
     const send = msg.send.bind(msg);
@@ -75,7 +105,14 @@ module.exports = robot => {
     }
     sendCommand(command, {
       url
-    }).catch(error => send(error.message));
+    })
+      .catch(error => send(error.message))
+      .then(_ => {
+        robot.adapter.client.web.reactions.add('tv', {
+          channel: msg.message.room,
+          timestamp: msg.message.id
+        });
+      });
   });
   robot.respond(/tv (\d{0,3})/i, msg => {
     const send = msg.send.bind(msg);
@@ -95,6 +132,19 @@ module.exports = robot => {
     }
     sendCommand('set_volume', {
       volume: parsedVolume
-    }).catch(error => send(error.message));
+    })
+      .catch(error => send(error.message))
+      .then(_ => {
+        let emoji = 'speaker';
+        if (parsedVolume >= 50) {
+          emoji = 'loud_sound';
+        } else if (parsedVolume > 0) {
+          emoji = 'sound';
+        }
+        robot.adapter.client.web.reactions.add(emoji, {
+          channel: msg.message.room,
+          timestamp: msg.message.id
+        });
+      });
   });
 };

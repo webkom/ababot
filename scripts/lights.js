@@ -29,17 +29,33 @@ module.exports = robot => {
   robot.respond(/lights off/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('force_power_off').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('mobile_phone_off', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/lights on/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('force_power_on').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('bulb', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/lights lock/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('power_lock').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('lock', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/lights unlock/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('power_unlock').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('unlock', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
 };

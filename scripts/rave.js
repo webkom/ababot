@@ -29,6 +29,10 @@ module.exports = robot => {
   robot.respond(/rave off/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('force_power_off').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('cry', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/rave on/i, msg => {
     const send = msg.send.bind(msg);
@@ -40,13 +44,25 @@ module.exports = robot => {
       voice_name: 'sv'
     };
     mqttPublish('office_say/command', voiceCommand);
+    robot.adapter.client.web.reactions.add('middleparrot', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/rave lock/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('power_lock').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('lock', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
   robot.respond(/rave unlock/i, msg => {
     const send = msg.send.bind(msg);
     sendCommand('power_unlock').catch(error => send(error.message));
+    robot.adapter.client.web.reactions.add('unlock', {
+      channel: msg.message.room,
+      timestamp: msg.message.id
+    });
   });
 };
