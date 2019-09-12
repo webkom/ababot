@@ -5,3 +5,4 @@ node_modules
 private.key
 static/
 package-lock.json
+.idea/
