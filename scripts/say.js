@@ -41,7 +41,75 @@ module.exports = robot => {
 
   robot.respond(/voices/i, msg => {
     const voices = `
-TODO
+  afrikaans
+  albanian
+  aragonese
+  armenian
+  armenian-west
+  bosnian
+  brazil
+  bulgarian
+  cantonese
+  catalan
+  croatian
+  czech
+  danish
+  default
+  dutch
+  en-scottish
+  en-westindies
+  english
+  english-north
+  english-us
+  english_rp
+  english_wmids
+  esperanto
+  estonian
+  finnish
+  french
+  french-belgium
+  georgian
+  german
+  greek
+  greek-ancient
+  hindi
+  hungarian
+  icelandic
+  indonesian
+  irish-gaeilge
+  italian
+  kannada
+  kurdish
+  latin
+  latvian
+  lingua_franca_nova
+  lithuanian
+  lojban
+  macedonian
+  malay
+  malayalam
+  mandarin
+  nepali
+  norwegian
+  persian
+  persian-pinglish
+  polish
+  portugal
+  punjabi
+  romanian
+  russian
+  serbian
+  slovak
+  spanish
+  spanish-latin-am
+  swahili-test
+  swedish
+  tamil
+  turkish
+  vietnam
+  vietnam_hue
+  vietnam_sgn
+  welsh
     `;
     msg.send(voices);
   });
