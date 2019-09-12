@@ -38,7 +38,7 @@ module.exports = robot => {
     const voiceCommand = {
       command: 'say',
       text: 'nu kör vi',
-      voice_nr: '2'
+      voice_name: 'swedish'
     };
     mqttClient.publish('office_say/command', JSON.stringify(voiceCommand));
   });
