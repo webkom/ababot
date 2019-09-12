@@ -18,15 +18,11 @@ const client = mqtt.connect('mqtt://mqtt.abakus.no', {
 });
 
 client.on('connect', function() {
-  client.subscribe('office-say/command', function(err) {
-    if (!err) {
-      client.publish('office-say/command', 'Hello mqtt');
-    }
-  });
+  client.subscribe('office_say/command');
 });
 
 function sendCommand(command, text = null, voice_nr = null) {
-  payload = {
+  let payload = {
     command
   };
   if (voice_nr !== null) {
@@ -36,7 +32,7 @@ function sendCommand(command, text = null, voice_nr = null) {
     payload['text'] = text;
   }
 
-  return client.publish('office-say/command', JSON.stringify(payload));
+  return client.publish('office_say/command', JSON.stringify(payload));
 }
 
 module.exports = robot => {
@@ -45,11 +41,13 @@ module.exports = robot => {
     let text = msg.match[1] && msg.match[1].trim();
     let voice_nr = msg.match[2] && msg.match[2].trim();
 
+    if (voice_nr === 'random') {
+    }
     // If the last argument wasn't a number, interpret that as voice_nr not
     // being provided
     if (isNaN(voice_nr)) {
       text = text + ' ' + voice_nr;
-      voice_nr = undefined;
+      voice_nr = null;
     }
     sendCommand('say', text, voice_nr);
   });
@@ -102,6 +100,9 @@ module.exports = robot => {
     voice nr 44: ru_RU (Yuri)
     voice nr 45: pl_PL (Zosia)
     voice nr 46: cs_CZ (Zuzana)
+
+    Engelske stemmer: [0, 7, 10, 11, 17, 28, 32, 36, 40]
+    Norske stemmer: [30]
     `;
     msg.send(voices);
   });
