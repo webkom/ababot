@@ -132,7 +132,7 @@ module.exports = robot => {
   robot.respond(/voices/i, msg => {
     let formattedVoices = '';
     for (key in voices) {
-      formattedVoices += key + ': ' + voices[key] + '\n';
+      formattedVoices += `\`${key}\`: ${voices[key]}\n`;
     }
     msg.send(formattedVoices);
   });
