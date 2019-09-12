@@ -17,10 +17,6 @@ const client = mqtt.connect('mqtt://mqtt.abakus.no', {
   password: MQTT_PASS
 });
 
-client.on('connect', function() {
-  client.subscribe('office_say/command');
-});
-
 function sendCommand(command, text = null, voice_nr = null) {
   let payload = {
     command
@@ -41,11 +37,9 @@ module.exports = robot => {
     let text = msg.match[1] && msg.match[1].trim();
     let voice_nr = msg.match[2] && msg.match[2].trim();
 
-    if (voice_nr === 'random') {
-    }
     // If the last argument wasn't a number, interpret that as voice_nr not
     // being provided
-    if (isNaN(voice_nr)) {
+    if (voice_nr !== 'random' && isNaN(voice_nr)) {
       text = text + ' ' + voice_nr;
       voice_nr = null;
     }
