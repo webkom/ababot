@@ -8,12 +8,13 @@
 
 const _ = require('lodash');
 const fetch = require('node-fetch');
-const members = require('../lib/members');
 const mqtt = require('mqtt');
 
+const { MQTT_USER, MQTT_PASS } = process.env;
+
 const client = mqtt.connect('mqtt://mqtt.abakus.no', {
-  username: 'odinugedal',
-  password: ''
+  username: MQTT_USER,
+  password: MQTT_PASS
 });
 
 client.on('connect', function() {
@@ -35,16 +36,22 @@ function sendCommand(command, text = null, voice_nr = null) {
     payload['text'] = text;
   }
 
-  console.log('Sending payload: ' + JSON.stringify(payload));
   return client.publish('office-say/command', JSON.stringify(payload));
 }
 
 module.exports = robot => {
-  robot.respond(/say (.*)?/i, msg => {
+  robot.respond(/say (.*)? (.*)?/i, msg => {
     const send = msg.send.bind(msg);
-    const text = msg.match[1].trim();
-    const voice_nr = msg.match[2].trim();
-    sendCommand('say', text, voice_nr).catch(error => send(error.message));
+    let text = msg.match[1] && msg.match[1].trim();
+    let voice_nr = msg.match[2] && msg.match[2].trim();
+
+    // If the last argument wasn't a number, interpret that as voice_nr not
+    // being provided
+    if (isNaN(voice_nr)) {
+      text = text + ' ' + voice_nr;
+      voice_nr = undefined;
+    }
+    sendCommand('say', text, voice_nr);
   });
 
   robot.respond(/voices/i, msg => {
