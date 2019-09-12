@@ -8,14 +8,7 @@
 
 const _ = require('lodash');
 const fetch = require('node-fetch');
-const mqtt = require('mqtt');
-
-const { MQTT_USER, MQTT_PASS } = process.env;
-
-const client = mqtt.connect('mqtt://mqtt.abakus.no', {
-  username: MQTT_USER,
-  password: MQTT_PASS
-});
+const mqttClient = require('../lib/mqtt_client');
 
 function sendCommand(command, text = null, voice_nr = null) {
   let payload = {
@@ -28,7 +21,7 @@ function sendCommand(command, text = null, voice_nr = null) {
     payload['text'] = text;
   }
 
-  return client.publish('office_say/command', JSON.stringify(payload));
+  return mqttClient.publish('office_say/command', JSON.stringify(payload));
 }
 
 module.exports = robot => {
