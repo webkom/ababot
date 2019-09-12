@@ -5,7 +5,7 @@
 //   hubot radio <station_id> - Play a radio station on the Office Chromecast.
 //   hubot radio stations - Display a list of available radio stations
 
-const mqttClient = require('../lib/mqtt_client');
+const mqttPublish = require('../lib/mqtt');
 
 const stations = [
   {
@@ -74,8 +74,7 @@ function playRadioStation(station) {
     content_type: station.contentType
   };
 
-  const client = mqttClient();
-  client.publish('office_chromecast/command', JSON.stringify(payload));
+  mqttPublish('office_chromecast/command', payload);
 }
 
 module.exports = robot => {

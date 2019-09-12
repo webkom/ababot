@@ -9,9 +9,8 @@
 //   hubot rave unlock - Unlock the power state of the lasers so it can be changed by other applications
 
 const _ = require('lodash');
-const fetch = require('node-fetch');
 const openFaas = require('../lib/openfaas');
-const mqttClient = require('../lib/mqtt_client');
+const mqttPublish = require('../lib/mqtt');
 
 function sendCommand(command) {
   payload = {
@@ -38,9 +37,9 @@ module.exports = robot => {
     const voiceCommand = {
       command: 'say',
       text: 'nu kör vi',
-      voice_name: 'swedish'
+      voice_name: 'sv'
     };
-    mqttClient().publish('office_say/command', JSON.stringify(voiceCommand));
+    mqttPublish('office_say/command', voiceCommand);
   });
   robot.respond(/rave lock/i, msg => {
     const send = msg.send.bind(msg);

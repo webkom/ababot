@@ -8,7 +8,7 @@
 
 const _ = require('lodash');
 const fetch = require('node-fetch');
-const mqttClient = require('../lib/mqtt_client');
+const mqttPublish = require('../lib/mqtt');
 
 const voices = {
   af: 'Afrikaans',
@@ -105,8 +105,7 @@ function sendCommand(command, text = null, voiceName = null) {
     payload['text'] = text;
   }
 
-  const client = mqttClient();
-  client.publish('office_say/command', JSON.stringify(payload));
+  mqttPublish('office_say/command', payload);
 }
 
 module.exports = robot => {
