@@ -40,7 +40,7 @@ module.exports = robot => {
       text: 'nu kör vi',
       voice_name: 'swedish'
     };
-    mqttClient.publish('office_say/command', JSON.stringify(voiceCommand));
+    mqttClient().publish('office_say/command', JSON.stringify(voiceCommand));
   });
   robot.respond(/rave lock/i, msg => {
     const send = msg.send.bind(msg);
