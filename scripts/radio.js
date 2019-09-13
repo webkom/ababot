@@ -74,7 +74,7 @@ function playRadioStation(station) {
     content_type: station.contentType
   };
 
-  mqttPublish('office_chromecast/command', payload);
+  return mqttPublish('office_chromecast/command', payload);
 }
 
 module.exports = robot => {
