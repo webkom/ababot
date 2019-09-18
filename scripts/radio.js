@@ -61,6 +61,19 @@ const stations = [
     name: 'NRK P3 Urørt',
     url: 'http://lyd.nrk.no/nrk_radio_p3_urort_mp3_h',
     contentType: 'audio/mp3'
+  },
+  {
+    id: 'thebeat',
+    name: 'The Beat',
+    url: 'http://stream.thebeat.no/beat64.mp3',
+    contentType: 'audio/mp3'
+  },
+  {
+    id: 'energi',
+    name: 'Energi',
+    url:
+      'https://nrj.p4groupaudio.com/NRJ_MH?args=web_01&referrer=13&station=13&codec=mp3&quality=high&distributor=p4',
+    contentType: 'audio/mp3'
   }
 ];
 
