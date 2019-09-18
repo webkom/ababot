@@ -74,6 +74,12 @@ const stations = [
     url:
       'https://nrj.p4groupaudio.com/NRJ_MH?args=web_01&referrer=13&station=13&codec=mp3&quality=high&distributor=p4',
     contentType: 'audio/mp3'
+  },
+  {
+    id: 'isis',
+    name: 'ISIS',
+    url: 'http://angamy.com:9302/stream?type=http&nocache=83533',
+    contentType: 'audio/mp3'
   }
 ];
 
