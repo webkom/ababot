@@ -110,6 +110,7 @@ function sendCommand(command, text = null, voiceName = null) {
 
 module.exports = robot => {
   robot.respond(/say (.*)?/i, msg => {
+    console.log('SayLog', msg.message.user.name, msg.message.text);
     const send = msg.send.bind(msg);
     let text = msg.match[1] && msg.match[1].trim();
 
