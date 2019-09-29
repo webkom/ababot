@@ -11,6 +11,7 @@
 const _ = require('lodash');
 const members = require('../lib/members');
 const openFaas = require('../lib/openfaas');
+const logger = require('./log');
 
 function getKaffeVolume(slackName) {
   return members(`?slack=${slackName}`).then(body => {
@@ -57,6 +58,7 @@ async function startPump(slackName, centiliters, name = 'kaffe', count = 1) {
 
 module.exports = robot => {
   robot.respond(/pump kaffe/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     const slackName = msg.message.user.name;
     getKaffeVolume(slackName)
@@ -73,6 +75,7 @@ module.exports = robot => {
       .catch(error => send(error.message));
   });
   robot.respond(/pump shot( \d{1,4})?/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     const slackName = msg.message.user.name;
     let shotCount = 1;
@@ -100,6 +103,7 @@ module.exports = robot => {
       .catch(error => send(error.message));
   });
   robot.respond(/pump (\d{1,50})/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     const slackName = msg.message.user.name;
     if (msg.match[1] === undefined) {

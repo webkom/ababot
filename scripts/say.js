@@ -9,6 +9,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const mqttPublish = require('../lib/mqtt');
+const logger = require('./log');
 
 const voices = {
   af: 'Afrikaans',
@@ -110,6 +111,7 @@ function sendCommand(command, text = null, voiceName = null) {
 
 module.exports = robot => {
   robot.respond(/say (.*)?/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     let text = msg.match[1] && msg.match[1].trim();
 
@@ -133,6 +135,7 @@ module.exports = robot => {
   });
 
   robot.respond(/voices/i, msg => {
+    logger.log(msg);
     let formattedVoices = '';
     for (key in voices) {
       formattedVoices += `\`${key}\`: ${voices[key]}\n`;

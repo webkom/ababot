@@ -11,6 +11,7 @@
 const _ = require('lodash');
 const openFaas = require('../lib/openfaas');
 const mqttPublish = require('../lib/mqtt');
+const logger = require('./log');
 
 function sendCommand(command) {
   payload = {
@@ -27,6 +28,7 @@ function sendCommand(command) {
 
 module.exports = robot => {
   robot.respond(/rave off/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('force_power_off').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('cry', {
@@ -35,6 +37,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/rave on/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('force_power_on').catch(error => send(error.message));
 
@@ -50,6 +53,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/rave lock/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('power_lock').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('lock', {
@@ -58,6 +62,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/rave unlock/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('power_unlock').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('unlock', {

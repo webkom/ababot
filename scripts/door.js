@@ -6,9 +6,11 @@
 
 const _ = require('lodash');
 const officeDoor = require('../lib/office_door');
+const logger = require('./log');
 
 module.exports = robot => {
   robot.respond(/door/i, msg => {
+    logger.log(msg);
     // Reply with the status of the door
     officeDoor()
       .then(door => {

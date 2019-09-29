@@ -14,6 +14,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const members = require('../lib/members');
+const logger = require('./log');
 
 const { SODA_TOKEN, SODA_URL } = process.env;
 
@@ -92,6 +93,7 @@ function purchaseSoda(slackName, sodaType) {
 
 module.exports = robot => {
   robot.respond(/kjøp (.*)?/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     const productName = msg.match[1].trim();
     purchaseSoda(msg.message.user.name, productName).catch(error =>
@@ -100,6 +102,7 @@ module.exports = robot => {
   });
 
   robot.respond(/brus produkter/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     getProducts()
       .then(send)
@@ -107,6 +110,7 @@ module.exports = robot => {
   });
 
   robot.respond(/saldo brus( .*)?/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     const slackName = msg.match[1]
       ? msg.match[1].trim()

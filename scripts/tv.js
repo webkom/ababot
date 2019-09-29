@@ -15,6 +15,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const openFaas = require('../lib/openfaas');
+const logger = require('./log');
 
 // Django regex for URLs
 const regexUrlCommand = /tv (.*(?:http|ftp)s?:\/\/(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[\/?]\S+).*)/i;
@@ -32,6 +33,7 @@ function sendCommand(command, additional = {}) {
 
 module.exports = robot => {
   robot.respond(/tv pause/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('pause').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('double_vertical_bar', {
@@ -40,6 +42,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/tv play/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('play').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('arrow_forward', {
@@ -48,6 +51,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/tv mute/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('mute').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('mute', {
@@ -56,6 +60,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/tv unmute/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('unmute').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('speaker', {
@@ -64,6 +69,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/tv next/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('next').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add(
@@ -75,6 +81,7 @@ module.exports = robot => {
     );
   });
   robot.respond(/tv previous/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('previous').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add(
@@ -86,6 +93,7 @@ module.exports = robot => {
     );
   });
   robot.respond(regexUrlCommand, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     if (msg.match[1] === undefined) {
       return;
@@ -115,6 +123,7 @@ module.exports = robot => {
       });
   });
   robot.respond(/tv (\d{0,3})/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     if (msg.match[1] === undefined) {
       return;
