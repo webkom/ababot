@@ -2,8 +2,6 @@ const admin = require('firebase-admin');
 const getServiceAccount = require('../lib/google');
 
 const serviceAccount = getServiceAccount();
-console.log('Acc', serviceAccount);
-console.log('Type', typeof serviceAccount);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -12,7 +10,6 @@ admin.initializeApp({
 const db = admin.firestore();
 
 module.exports.log = function(msg) {
-  console.log('Running log on', msg);
   const type = msg.message.text.split(' ')[1];
   const timeInMilli = new Date().getTime().toString();
   const docRef = db.collection(type).doc(timeInMilli);
@@ -25,7 +22,7 @@ module.exports.log = function(msg) {
   });
 };
 
-const tail = msg => {
+module.exports.tail = function(msg) {
   const textArray = msg.message.text.split(' ');
 
   // Type will alsways be the last argument
@@ -44,17 +41,11 @@ const tail = msg => {
         const dateString = new Date(dateInMilli).toLocaleString('no', {
           hour12: false
         });
+        console.log('Doc', doc);
         msg.send(dateString, doc.data());
       });
     })
     .catch(err => {
       msg.send('Error getting documents', err);
     });
-};
-
-module.exports = robot => {
-  robot.respond(/tail (.*)?/i, msg => {
-    console.log('Running tail on', msg);
-    tail(msg);
-  });
 };
