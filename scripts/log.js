@@ -15,7 +15,7 @@ module.exports.log = function(msg) {
   const docRef = db.collection(type).doc(timeInMilli);
 
   docRef.set({
-    id: msg.message.id,
+    id: parseInt(timeInMilli),
     user: msg.message.user.name,
     command: msg.message.text,
     room: msg.message.room
@@ -33,19 +33,26 @@ module.exports.tail = function(msg) {
   const limit = indexOfN === -1 ? 10 : parseInt(textArray[indexOfN + 1]);
 
   db.collection(type)
+    .orderBy('id', 'desc')
     .limit(limit)
     .get()
     .then(req => {
+      let response = '';
+
       req.forEach(doc => {
         const dateInMilli = parseInt(doc.id);
         const dateString = new Date(dateInMilli).toLocaleString('no', {
           hour12: false
         });
-        console.log('Doc', doc);
-        msg.send(dateString, doc.data());
+
+        response += `At: ${dateString}, [${doc.data().user}] said [${
+          doc.data().command
+        }] in room [${doc.data().room}] \n`;
       });
+
+      msg.send(response);
     })
     .catch(err => {
-      msg.send('Error getting documents', err);
+      console.log('Error getting documents', err);
     });
 };
