@@ -6,6 +6,7 @@
 //   hubot radio stations - Display a list of available radio stations
 
 const mqttPublish = require('../lib/mqtt');
+const logger = require('./log');
 
 const stations = [
   {
@@ -98,7 +99,7 @@ function playRadioStation(station) {
 
 module.exports = robot => {
   robot.respond(/radio (.*)?/i, msg => {
-    console.log('RadioLog', msg.message.user.name, msg.message.text);
+    logger.log(msg);
     const send = msg.send.bind(msg);
     const stationId = msg.match[1] && msg.match[1].trim();
     if (stationId == 'stations') {

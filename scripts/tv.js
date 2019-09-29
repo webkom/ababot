@@ -40,7 +40,6 @@ module.exports = robot => {
     });
   });
   robot.respond(/tv play/i, msg => {
-    console.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('play').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('arrow_forward', {

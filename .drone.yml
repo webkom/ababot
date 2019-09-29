@@ -11,6 +11,7 @@ pipeline:
     when:
       branch:
         - master
+        - firebase-logs
     registry: https://registry.abakus.no
     repo: registry.abakus.no/webkom/ababot
     secrets: [ docker_username, docker_password ]
