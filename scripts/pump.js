@@ -11,7 +11,7 @@
 const _ = require('lodash');
 const members = require('../lib/members');
 const openFaas = require('../lib/openfaas');
-const logger = require('./log');
+const logger = require('../lib/log');
 
 function getKaffeVolume(slackName) {
   return members(`?slack=${slackName}`).then(body => {

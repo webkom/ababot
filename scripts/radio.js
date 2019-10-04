@@ -6,7 +6,7 @@
 //   hubot radio stations - Display a list of available radio stations
 
 const mqttPublish = require('../lib/mqtt');
-const logger = require('./log');
+const logger = require('../lib/log');
 
 const stations = [
   {

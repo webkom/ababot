@@ -11,7 +11,7 @@
 const _ = require('lodash');
 const openFaas = require('../lib/openfaas');
 const mqttPublish = require('../lib/mqtt');
-const logger = require('./log');
+const logger = require('../lib/log');
 
 function sendCommand(command) {
   payload = {

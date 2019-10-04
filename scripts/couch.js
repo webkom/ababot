@@ -12,7 +12,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const openFaas = require('../lib/openfaas');
-const logger = require('./log');
+const logger = require('../lib/log');
 
 function sendCommand(command, color = null) {
   payload = {

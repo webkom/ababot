@@ -14,7 +14,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const members = require('../lib/members');
-const logger = require('./log');
+const logger = require('../lib/log');
 
 const { SODA_TOKEN, SODA_URL } = process.env;
 

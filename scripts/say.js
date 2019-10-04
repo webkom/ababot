@@ -9,7 +9,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const mqttPublish = require('../lib/mqtt');
-const logger = require('./log');
+const logger = require('../lib/log');
 
 const voices = {
   af: 'Afrikaans',
