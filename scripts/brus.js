@@ -17,6 +17,10 @@ const members = require('../lib/members');
 
 const { SODA_TOKEN, SODA_URL } = process.env;
 
+const sodaMappings = {
+  ':dahls:': 'beer_dahls_bottle'
+};
+
 function brus(path, options = {}) {
   return fetch(
     `${SODA_URL}/api/liste${path}`,
@@ -69,7 +73,7 @@ function purchaseSoda(slackName, sodaType) {
         name,
         shopping_cart: [
           {
-            product_name: sodaType,
+            product_name: sodaMappings[sodaType] || sodaType,
             count: 1
           }
         ]
@@ -127,9 +131,7 @@ module.exports = robot => {
           .then(
             // TODO: list products
             body =>
-              `${body.name} sin saldo er ${
-                body.balance
-              } spenn. (TODO: produktliste, @noen fix)`
+              `${body.name} sin saldo er ${body.balance} spenn. (TODO: produktliste, @noen fix)`
           );
       })
       .then(send)
