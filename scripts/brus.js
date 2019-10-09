@@ -131,7 +131,9 @@ module.exports = robot => {
           .then(
             // TODO: list products
             body =>
-              `${body.name} sin saldo er ${body.balance} spenn. (TODO: produktliste, @noen fix)`
+              `${body.name} sin saldo er ${
+                body.balance
+              } spenn. (TODO: produktliste, @noen fix)`
           );
       })
       .then(send)
