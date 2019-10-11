@@ -6,6 +6,7 @@
 //   hubot poll\n<pollName>\n<option0>\n<option1>... - Create poll with new lines instead of quotation marks
 
 const _ = require('lodash');
+const logger = require('../lib/log');
 
 const defaultReaction = 'x';
 
@@ -30,6 +31,7 @@ const createResponse = poll => {
 
 module.exports = robot => {
   robot.respond(/poll/i, msg => {
+    logger.log(msg);
     robot.adapter.client.web.emoji
       .list()
       .then(r =>

@@ -1,16 +1,18 @@
 pipeline:
   tests:
-    image: node:8
+    image: node:10
     when:
-      event: push
+      event: [ push ]
     commands:
       - npm install
       - npm run lint
   docker:
     image: plugins/docker
     when:
+      event: [ push ]
       branch:
         - master
+        - firebase-logs
     registry: https://registry.abakus.no
     repo: registry.abakus.no/webkom/ababot
     secrets: [ docker_username, docker_password ]

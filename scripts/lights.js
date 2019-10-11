@@ -11,6 +11,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const openFaas = require('../lib/openfaas');
+const logger = require('../lib/log');
 
 function sendCommand(command) {
   payload = {
@@ -27,6 +28,7 @@ function sendCommand(command) {
 
 module.exports = robot => {
   robot.respond(/lights off/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('force_power_off').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('mobile_phone_off', {
@@ -35,6 +37,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/lights on/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('force_power_on').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('bulb', {
@@ -43,6 +46,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/lights lock/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('power_lock').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('lock', {
@@ -51,6 +55,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/lights unlock/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('power_unlock').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('unlock', {

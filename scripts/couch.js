@@ -12,6 +12,7 @@
 const _ = require('lodash');
 const fetch = require('node-fetch');
 const openFaas = require('../lib/openfaas');
+const logger = require('../lib/log');
 
 function sendCommand(command, color = null) {
   payload = {
@@ -31,6 +32,7 @@ function sendCommand(command, color = null) {
 
 module.exports = robot => {
   robot.respond(/couch off/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('force_power_off').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('mobile_phone_off', {
@@ -39,6 +41,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/couch on/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('force_power_on').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('bulb', {
@@ -47,6 +50,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/couch lock/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('power_lock').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('lock', {
@@ -55,6 +59,7 @@ module.exports = robot => {
     });
   });
   robot.respond(/couch unlock/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     sendCommand('power_unlock').catch(error => send(error.message));
     robot.adapter.client.web.reactions.add('unlock', {
@@ -64,6 +69,7 @@ module.exports = robot => {
   });
 
   robot.respond(/couch (red|green|yellow|orange|blue|magenta|cyan)/i, msg => {
+    logger.log(msg);
     const send = msg.send.bind(msg);
     const color = msg.match[1].trim();
     sendCommand('set_color', color).catch(error => send(error.message));
