@@ -10,6 +10,7 @@
     "prettier": "prettier '**/*.js' --write"
   },
   "dependencies": {
+    "@sentry/node": "^5.7.0",
     "command-line-args": "^5.1.1",
     "firebase-admin": "8.6.0",
     "hubot": "3.3.2",

@@ -12,6 +12,7 @@ pipeline:
       event: [ push ]
       branch:
         - master
+        - sentry
     registry: https://registry.abakus.no
     repo: registry.abakus.no/webkom/ababot
     secrets: [ docker_username, docker_password ]
