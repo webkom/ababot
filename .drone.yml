@@ -15,6 +15,11 @@ pipeline:
         - sentry
     registry: https://registry.abakus.no
     repo: registry.abakus.no/webkom/ababot
-    secrets: [ docker_username, docker_password ]
+    secrets: [ docker_username, docker_password, sentry_auth_token ]
     tags:
       - ${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:7}
+    build_args:
+      - RELEASE=${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:7}
+      - SENTRY_AUTH_TOKEN
+      - SENTRY_ORG=abakus
+      - SENTRY_PROJECT=ababot
