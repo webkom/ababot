@@ -20,7 +20,7 @@ FROM node:10
 MAINTAINER Abakus Webkom <webkom@abakus.no>
 
 ARG RELEASE
-ENV RELEASE {RELEASE}
+ENV RELEASE ${RELEASE}
 
 ENV NODE_ENV production
 
