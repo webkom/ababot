@@ -19,7 +19,8 @@ const logger = require('../lib/log');
 const { SODA_TOKEN, SODA_URL } = process.env;
 
 const sodaMappings = {
-  ':dahls:': 'beer_dahls_bottle'
+  ':dahls:': 'beer_dahls_bottle',
+  ':dahls-jul:': 'beer_dahls_jul_bottle'
 };
 
 function brus(path, options = {}) {
