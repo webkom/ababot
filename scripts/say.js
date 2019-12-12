@@ -106,7 +106,7 @@ function sendCommand(command, text = null, voiceName = null) {
     payload['text'] = text;
   }
 
-  mqttPublish('office_say/command', payload);
+  mqttPublish('office_speaker/command', payload);
 }
 
 module.exports = robot => {

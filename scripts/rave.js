@@ -46,7 +46,7 @@ module.exports = robot => {
       text: 'nu kör vi',
       voice_name: 'sv'
     };
-    mqttPublish('office_say/command', voiceCommand);
+    mqttPublish('office_speaker/command', voiceCommand);
     robot.adapter.client.web.reactions.add('middleparrot', {
       channel: msg.message.room,
       timestamp: msg.message.id
