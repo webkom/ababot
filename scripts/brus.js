@@ -67,7 +67,7 @@ function getProducts() {
     });
 }
 
-function purchaseSoda(slackName, sodaType) {
+function purchaseSoda(slackName, sodaType, count = 1) {
   return getSodaName(slackName).then(name => {
     return brus(`/purchase/`, {
       method: 'POST',
@@ -76,7 +76,7 @@ function purchaseSoda(slackName, sodaType) {
         shopping_cart: [
           {
             product_name: sodaMappings[sodaType] || sodaType,
-            count: 1
+            count
           }
         ]
       })
@@ -98,12 +98,13 @@ function purchaseSoda(slackName, sodaType) {
 
 module.exports = robot => {
   Objects.keys(sodaMappings).map(sodaKey => {
-    robot.hear(new RegExp(sodaKey), msg => {
+    robot.hear(new RegExp(`(-|)(${sodaKey})`), msg => {
       if (msg.message.room === '#brus' || msg.message.room === 'brus') {
         logger.log(msg);
         const send = msg.send.bind(msg);
-        purchaseSoda(msg.message.user.name, sodaKey).catch(error =>
-          send(error.message)
+        const isMinus = msg.match[1].trim() === '-';
+        purchaseSoda(msg.message.user.name, sodaKey, isMinus ? -1 : 1).catch(
+          error => send(error.message)
         );
       }
     });
