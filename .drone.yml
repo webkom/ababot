@@ -1,19 +1,29 @@
-pipeline:
-  tests:
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: tests
     image: node:10
     when:
-      event: [ push ]
+      event: [push]
     commands:
       - npm install
       - npm run lint
-  docker:
+
+  - name: docker
     image: plugins/docker
     when:
-      event: [ push ]
+      event: [push]
       branch:
         - master
-    registry: https://registry.abakus.no
-    repo: registry.abakus.no/webkom/ababot
-    secrets: [ docker_username, docker_password ]
-    tags:
-      - ${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:7}
+    settings:
+      registry: https://registry.webkom.dev
+      repo: registry.webkom.dev/webkom/ababot
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - ${DRONE_BRANCH}-${DRONE_COMMIT_SHA:0:7}
