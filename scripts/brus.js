@@ -101,7 +101,7 @@ module.exports = robot => {
     robot.hear(new RegExp(`(-|)([0-9])*(${sodaKey})`), msg => {
       // #brus
       if (msg.message.room === 'C3W7P31MF') {
-        logger.log(msg);
+        logger.log(msg, "brus");
         const send = msg.send.bind(msg);
         const isMinus = msg.match[1].trim() === '-';
         const count = msg.match[2].trim() === '1';
