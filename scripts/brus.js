@@ -98,7 +98,7 @@ function purchaseSoda(slackName, sodaType, count = 1) {
 
 module.exports = robot => {
   Object.keys(sodaMappings).map(sodaKey => {
-    robot.hear(new RegExp(`(-|)([0-9])*((${sodaKey})`), msg => {
+    robot.hear(new RegExp(`(-|)([0-9])*(${sodaKey})`), msg => {
       // #brus
       if (msg.message.room === 'C3W7P31MF') {
         logger.log(msg);
