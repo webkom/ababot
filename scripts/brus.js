@@ -87,6 +87,8 @@ function purchaseSoda(slackName, sodaType, count = 1) {
             `Jeg klarte ikke å kjøpe brusen: fant ikke noe produkt med navnet \`${sodaType}\`\nSkriv \`hubot brus produkter\` for å se listen`
           );
         } else {
+          console.log(response);
+          response.text().then(console.log);
           throw new Error(`Jeg klarte ikke å kjøpe brusen: ${response.status}`);
         }
       }
@@ -103,8 +105,8 @@ module.exports = robot => {
       if (msg.message.room === 'C3W7P31MF') {
         logger.log(msg, 'brus');
         const send = msg.send.bind(msg);
-        const isMinus = msg.match[1].trim() === '-';
-        const count = msg.match[2].trim() === '1';
+        const isMinus = (msg.match[1] && msg.match[1].trim()) === '-';
+        const count = (msg.match[2] && msg.match[2].trim()) || '1';
         purchaseSoda(
           msg.message.user.name,
           sodaKey,
