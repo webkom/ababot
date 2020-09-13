@@ -98,34 +98,20 @@ function purchaseSoda(slackName, sodaType, count = 1) {
 
 module.exports = robot => {
   Object.keys(sodaMappings).map(sodaKey => {
-    console.log('Mapping thing:', sodaKey, new RegExp(`(-|)(${sodaKey})`));
-
-    robot.hear(new RegExp(`(-|)(${sodaKey})`), msg => {
-      console.log('Found match', msg);
-      if (msg.message.room === '#brus' || msg.message.room === 'brus') {
+    robot.hear(new RegExp(`(-|)([0-9])*((${sodaKey})`), msg => {
+      // #brus
+      if (msg.message.room === 'C3W7P31MF') {
         logger.log(msg);
         const send = msg.send.bind(msg);
         const isMinus = msg.match[1].trim() === '-';
-        purchaseSoda(msg.message.user.name, sodaKey, isMinus ? -1 : 1).catch(
-          error => send(error.message)
-        );
+        const count = msg.match[2].trim() === '1';
+        purchaseSoda(
+          msg.message.user.name,
+          sodaKey,
+          (isMinus ? -1 : 1) * parseInt(count, 10)
+        ).catch(error => send(error.message));
       }
     });
-  });
-  robot.hear(/./i, msg => {
-    console.log('matching', msg);
-  });
-
-  robot.hear(/:dahls:/i, msg => {
-    console.log('Found match', msg);
-    if (msg.message.room === '#brus' || msg.message.room === 'brus') {
-      logger.log(msg);
-      const send = msg.send.bind(msg);
-      const isMinus = false;
-      purchaseSoda(msg.message.user.name, sodaKey, isMinus ? -1 : 1).catch(
-        error => send(error.message)
-      );
-    }
   });
 
   robot.respond(/kjøp (.*)?/i, msg => {
