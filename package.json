@@ -28,6 +28,6 @@
     "singleQuote": true
   },
   "devDependencies": {
-    "prettier": "1.16.4"
+    "prettier": "^2.1.1"
   }
 }

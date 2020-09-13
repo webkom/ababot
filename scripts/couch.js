@@ -16,7 +16,7 @@ const logger = require('../lib/log');
 
 function sendCommand(command, color = null) {
   payload = {
-    command
+    command,
   };
   if (color !== null) {
     payload['color'] = color;
@@ -24,58 +24,58 @@ function sendCommand(command, color = null) {
 
   return openFaas('office-couch-api', {
     method: 'POST',
-    body: JSON.stringify(payload)
-  }).then(response => {
+    body: JSON.stringify(payload),
+  }).then((response) => {
     return;
   });
 }
 
-module.exports = robot => {
-  robot.respond(/couch off/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/couch off/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('force_power_off').catch(error => send(error.message));
+    sendCommand('force_power_off').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('mobile_phone_off', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/couch on/i, msg => {
+  robot.respond(/couch on/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('force_power_on').catch(error => send(error.message));
+    sendCommand('force_power_on').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('bulb', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/couch lock/i, msg => {
+  robot.respond(/couch lock/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('power_lock').catch(error => send(error.message));
+    sendCommand('power_lock').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('lock', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/couch unlock/i, msg => {
+  robot.respond(/couch unlock/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('power_unlock').catch(error => send(error.message));
+    sendCommand('power_unlock').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('unlock', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
 
-  robot.respond(/couch (red|green|yellow|orange|blue|magenta|cyan)/i, msg => {
+  robot.respond(/couch (red|green|yellow|orange|blue|magenta|cyan)/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     const color = msg.match[1].trim();
-    sendCommand('set_color', color).catch(error => send(error.message));
+    sendCommand('set_color', color).catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('sparkles', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
 };

@@ -8,12 +8,12 @@ const _ = require('lodash');
 const officeDoor = require('../lib/office_door');
 const logger = require('../lib/log');
 
-module.exports = robot => {
-  robot.respond(/door/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/door/i, (msg) => {
     logger.log(msg);
     // Reply with the status of the door
     officeDoor()
-      .then(door => {
+      .then((door) => {
         const date = new Date(door.last_datetime);
         const doorStatus = door.status == 'OPEN' ? 'ÅPEN' : 'LUKKET';
         msg.send(
@@ -22,6 +22,6 @@ module.exports = robot => {
             doorStatus
         );
       })
-      .catch(error => msg.send(error.message));
+      .catch((error) => msg.send(error.message));
   });
 };

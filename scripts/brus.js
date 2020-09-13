@@ -20,7 +20,7 @@ const { SODA_TOKEN, SODA_URL } = process.env;
 
 const sodaMappings = {
   ':dahls:': 'beer_dahls_bottle',
-  ':dahls-jul:': 'beer_dahls_jul_bottle'
+  ':dahls-jul:': 'beer_dahls_jul_bottle',
 };
 
 function brus(path, options = {}) {
@@ -31,8 +31,8 @@ function brus(path, options = {}) {
         method: 'GET',
         headers: {
           Authorization: `Token ${SODA_TOKEN}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       },
       options
     )
@@ -40,7 +40,7 @@ function brus(path, options = {}) {
 }
 
 function getSodaName(slackName) {
-  return members(`?slack=${slackName}`).then(body => {
+  return members(`?slack=${slackName}`).then((body) => {
     const user = body[0];
 
     if (!user || !user.brus) {
@@ -52,23 +52,23 @@ function getSodaName(slackName) {
 }
 function getProducts() {
   return brus(`/products/`, {
-    method: 'GET'
+    method: 'GET',
   })
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         throw new Error(`Jeg klarte ikke hente produktene fra brus`);
       }
       return response.json();
     })
-    .then(body => {
+    .then((body) => {
       return body
-        .map(product => `- \`${product.key}\`: ${product.current_price} kr`)
+        .map((product) => `- \`${product.key}\`: ${product.current_price} kr`)
         .join('\n');
     });
 }
 
 function purchaseSoda(slackName, sodaType, count = 1) {
-  return getSodaName(slackName).then(name => {
+  return getSodaName(slackName).then((name) => {
     return brus(`/purchase/`, {
       method: 'POST',
       body: JSON.stringify({
@@ -76,11 +76,11 @@ function purchaseSoda(slackName, sodaType, count = 1) {
         shopping_cart: [
           {
             product_name: sodaMappings[sodaType] || sodaType,
-            count
-          }
-        ]
-      })
-    }).then(response => {
+            count,
+          },
+        ],
+      }),
+    }).then((response) => {
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error(
@@ -98,9 +98,9 @@ function purchaseSoda(slackName, sodaType, count = 1) {
   });
 }
 
-module.exports = robot => {
-  Object.keys(sodaMappings).map(sodaKey => {
-    robot.hear(new RegExp(`(-|)([0-9])*(${sodaKey})`), msg => {
+module.exports = (robot) => {
+  Object.keys(sodaMappings).map((sodaKey) => {
+    robot.hear(new RegExp(`(-|)([0-9])*(${sodaKey})`), (msg) => {
       // #brus
       if (msg.message.room === 'C3W7P31MF') {
         logger.log(msg, 'brus');
@@ -111,29 +111,29 @@ module.exports = robot => {
           msg.message.user.name,
           sodaKey,
           (isMinus ? -1 : 1) * parseInt(count, 10)
-        ).catch(error => send(error.message));
+        ).catch((error) => send(error.message));
       }
     });
   });
 
-  robot.respond(/kjøp (.*)?/i, msg => {
+  robot.respond(/kjøp (.*)?/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     const productName = msg.match[1].trim();
-    purchaseSoda(msg.message.user.name, productName).catch(error =>
+    purchaseSoda(msg.message.user.name, productName).catch((error) =>
       send(error.message)
     );
   });
 
-  robot.respond(/brus produkter/i, msg => {
+  robot.respond(/brus produkter/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     getProducts()
       .then(send)
-      .catch(error => send(error.message));
+      .catch((error) => send(error.message));
   });
 
-  robot.respond(/saldo brus( .*)?/i, msg => {
+  robot.respond(/saldo brus( .*)?/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     const slackName = msg.match[1]
@@ -141,9 +141,9 @@ module.exports = robot => {
       : msg.message.user.name;
 
     getSodaName(slackName)
-      .then(name => {
+      .then((name) => {
         return brus(`/${name}/`)
-          .then(response => {
+          .then((response) => {
             if (response.status !== 200) {
               throw new Error(
                 `Jeg klarte ikke hente info fra brus (${response.status}).`
@@ -154,13 +154,11 @@ module.exports = robot => {
           })
           .then(
             // TODO: list products
-            body =>
-              `${body.name} sin saldo er ${
-                body.balance
-              } spenn. (TODO: produktliste, @noen fix)`
+            (body) =>
+              `${body.name} sin saldo er ${body.balance} spenn. (TODO: produktliste, @noen fix)`
           );
       })
       .then(send)
-      .catch(error => send(error.message));
+      .catch((error) => send(error.message));
   });
 };
