@@ -6,6 +6,9 @@ You can test your hubot by running the following, however some plugins will not
 behave as expected unless the [environment variables](#configuration) they rely
 upon have been set.
 
+OBS: A lot of the environment variables are pointing at the local cluster and will not work
+locally.
+
 You can start hubot locally by running:
 
     % bin/hubot
@@ -21,29 +24,14 @@ Then you can interact with hubot by typing `hubot help`.
     hubot help - Displays all of the help commands that hubot knows about.
     ...
 
-### Configuration
+### Adapters
 
-A few scripts (including some installed by default) require environment
-variables to be set as a simple form of configuration.
+We are running the Slack adapter to allow hubot to integrate with slack. we therefore run hubot
+with the `-a slack` argument
 
-Each script should have a commented header which contains a "Configuration"
-section that explains which values it requires to be placed in which variable.
-When you have lots of scripts installed this process can be quite labour
-intensive. The following shell command can be used as a stop gap until an
-easier way to do this has been implemented.
-
-    grep -o 'hubot-[a-z0-9_-]\+' external-scripts.json | \
-      xargs -n1 -I {} sh -c 'sed -n "/^# Configuration/,/^#$/ s/^/{} /p" \
-          $(find node_modules/{}/ -name "*.coffee")' | \
-        awk -F '#' '{ printf "%-25s %s\n", $1, $2 }'
-
-How to set environment variables will be specific to your operating system.
-Rather than recreate the various methods and best practices in achieving this,
-it's suggested that you search for a dedicated guide focused on your OS.
-
-### Scripting
-
-[scripting-docs]: https://github.com/github/hubot/blob/master/docs/scripting.md
+```sh
+$ bin/hubot -a <adapter>
+```
 
 ### external-scripts
 
@@ -58,7 +46,6 @@ available hubot plugins on [npmjs.com][npmjs] or by using `npm search`:
     NAME             DESCRIPTION                        AUTHOR DATE       VERSION KEYWORDS
     hubot-pandapanda a hubot script for panda responses =missu 2014-11-30 0.9.2   hubot hubot-scripts panda
     ...
-
 
 To use a package, check the package's documentation, but in general it is:
 
@@ -76,49 +63,7 @@ the `hubot-fun` plugin, but all four of those in `hubot-auto-deploy`.
 
 ```json
 {
-  "hubot-fun": [
-    "crazy",
-    "thanks"
-  ],
+  "hubot-fun": ["crazy", "thanks"],
   "hubot-auto-deploy": "*"
 }
 ```
-
-**Be aware that not all plugins support this usage and will typically fallback
-to including all scripts.**
-
-[npmjs]: https://www.npmjs.com
-
-##  Persistence
-
-If you are going to use the `hubot-redis-brain` package (strongly suggested),
-you will need to add the Redis to Go addon on Heroku which requires a verified
-account or you can create an account at [Redis to Go][redistogo] and manually
-set the `REDISTOGO_URL` variable.
-
-    % heroku config:add REDISTOGO_URL="..."
-
-If you don't need any persistence feel free to remove the `hubot-redis-brain`
-from `external-scripts.json` and you don't need to worry about redis at all.
-
-[redistogo]: https://redistogo.com/
-
-## Adapters
-
-Adapters are the interface to the service you want your hubot to run on, such
-as Campfire or IRC. There are a number of third party adapters that the
-community have contributed. Check [Hubot Adapters][hubot-adapters] for the
-available ones.
-
-If you would like to run a non-Campfire or shell adapter you will need to add
-the adapter package as a dependency to the `package.json` file in the
-`dependencies` section.
-
-Once you've added the dependency with `npm install --save` to install it you
-can then run hubot with the adapter.
-
-    % bin/hubot -a <adapter>
-
-Where `<adapter>` is the name of your adapter without the `hubot-` prefix.
-
-[hubot-adapters]: https://github.com/github/hubot/blob/master/docs/adapters.md
