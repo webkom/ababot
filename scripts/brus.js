@@ -112,7 +112,10 @@ module.exports = robot => {
       }
     });
   });
-  robot.hear(/:dahls:/, msg => {
+  robot.hear(/./i, msg => {
+    console.log('matching', msg);
+  });
+  robot.hear(/:dahls:/i, msg => {
     console.log('Found match', msg);
     if (msg.message.room === '#brus' || msg.message.room === 'brus') {
       logger.log(msg);
