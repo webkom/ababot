@@ -18,7 +18,6 @@ steps:
       event: [push]
       branch:
         - master
-        - number-name
     settings:
       registry: https://registry.webkom.dev
       repo: registry.webkom.dev/webkom/ababot
