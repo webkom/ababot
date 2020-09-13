@@ -9,7 +9,31 @@ const members = require('../lib/members');
 const logger = require('../lib/log');
 
 module.exports = (robot) => {
-  robot.respond(/nummer/i, (msg) => {
+  robot.respond(/number (.*)?/i, (msg) => {
+    logger.log(msg);
+    members()
+      .then((members) => {
+        if (members.length === 0) {
+          return;
+        }
+        console.log('Members', members);
+        console.log('Message', msg);
+        const member = members.find((mem) => mem.name == msg.message);
+        if (!member) {
+          msg.send(`Fant ikke medlem ${msg.message} :(`);
+        }
+        member &&
+          msg.send(
+            `*${m.name}*:${'\t'} ${m.phone_number.substr(0, 3)} ${m.phone_number
+              .substr(3)
+              .match(/.{1,2}/g)
+              .join(' ')}`
+          );
+      })
+      .catch((error) => msg.send(error.message));
+  });
+
+  robot.respond(/numbers/i, (msg) => {
     logger.log(msg);
     members('?active=true')
       .then((members) => {
