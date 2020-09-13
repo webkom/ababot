@@ -8,18 +8,18 @@ const _ = require('lodash');
 const members = require('../lib/members');
 const logger = require('../lib/log');
 
-module.exports = robot => {
-  robot.respond(/nummer/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/nummer/i, (msg) => {
     logger.log(msg);
     members('?active=true')
-      .then(members => {
+      .then((members) => {
         if (members.length === 0) {
           return;
         }
         msg.send(
           members
             .map(
-              m =>
+              (m) =>
                 `*${m.name}*:${'\t'} ${m.phone_number.substr(
                   0,
                   3
@@ -32,6 +32,6 @@ module.exports = robot => {
             .join('\n')
         );
       })
-      .catch(error => msg.send(error.message));
+      .catch((error) => msg.send(error.message));
   });
 };

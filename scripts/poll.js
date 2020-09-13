@@ -11,52 +11,52 @@ const logger = require('../lib/log');
 const defaultReaction = 'x';
 
 const createPoll = (message, reactionPool) => {
-  const [name, ...options] = (message.match(/(\".+?\")|(\n.+)/g) || []).map(
-    string => string.replace(/\"|\n/g, '')
-  );
+  const [name, ...options] = (
+    message.match(/(\".+?\")|(\n.+)/g) || []
+  ).map((string) => string.replace(/\"|\n/g, ''));
   return {
     name,
-    options: options.map(option => ({
+    options: options.map((option) => ({
       reaction: reactionPool.length ? reactionPool.pop() : defaultReaction,
-      text: option
-    }))
+      text: option,
+    })),
   };
 };
 
-const createResponse = poll => {
+const createResponse = (poll) => {
   return `Poll: ${poll.name}\n${poll.options
-    .map(option => `:${option.reaction}:: ${option.text}`)
+    .map((option) => `:${option.reaction}:: ${option.text}`)
     .join('\n')}`;
 };
 
-module.exports = robot => {
-  robot.respond(/poll/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/poll/i, (msg) => {
     logger.log(msg);
     robot.adapter.client.web.emoji
       .list()
-      .then(r =>
+      .then((r) =>
         r.ok
           ? _.shuffle(
               Object.keys(r.emoji).filter(
-                emoji => !r.emoji[emoji].startsWith('alias:')
+                (emoji) => !r.emoji[emoji].startsWith('alias:')
               )
             )
           : []
       )
-      .then(reactionPool => {
+      .then((reactionPool) => {
         const poll = createPoll(msg.message.text, reactionPool);
         if (poll.name && poll.options.length >= 2) {
           const response = createResponse(poll);
           robot.adapter.client.web.chat
             .postMessage(msg.message.room, response, { username: 'PaaS' })
-            .then(r => {
+            .then((r) => {
               if (r.ok)
                 poll.options
                   .filter(({ reaction }) => reaction !== defaultReaction)
                   .map(({ reaction }) =>
                     robot.adapter.client.web.reactions.add(reaction, {
                       channel: msg.message.room,
-                      timestamp: r.ts
+                      timestamp: r.ts,
                     })
                   );
             });

@@ -18,10 +18,10 @@ const prefixes = [
   'lol rekt',
   'About time you got picked',
   'RIP',
-  'Move it'
+  'Move it',
 ];
 
-const createMention = username => `@${username}`;
+const createMention = (username) => `@${username}`;
 
 function brus(path, options = {}) {
   return fetch(
@@ -31,18 +31,18 @@ function brus(path, options = {}) {
         method: 'GET',
         headers: {
           Authorization: `Token ${SODA_TOKEN}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       },
       options
     )
   );
 }
 
-module.exports = robot => {
-  robot.hear(/@noen-nye/i, msg => {
+module.exports = (robot) => {
+  robot.hear(/@noen-nye/i, (msg) => {
     members('?new=true')
-      .then(members => {
+      .then((members) => {
         if (!members.length) {
           return;
         }
@@ -52,13 +52,13 @@ module.exports = robot => {
         const cheesyPrefix = _.sample(prefixes);
         msg.send(`${cheesyPrefix} ${mention}`);
       })
-      .catch(error => msg.send(error.message));
+      .catch((error) => msg.send(error.message));
   });
 
-  robot.hear(/@noen/i, msg => {
+  robot.hear(/@noen/i, (msg) => {
     // Reply with a cheesy message and a random picked mention.
     members('?active=true')
-      .then(members => {
+      .then((members) => {
         if (!members.length) {
           return;
         }
@@ -68,53 +68,58 @@ module.exports = robot => {
         const cheesyPrefix = _.sample(prefixes);
         msg.send(`${cheesyPrefix} ${mention}`);
       })
-      .catch(error => msg.send(error.message));
+      .catch((error) => msg.send(error.message));
   });
 
-  robot.hear(/@aktive|@active/i, msg => {
+  robot.hear(/@aktive|@active/i, (msg) => {
     // Reply with a message containing mentions of all active users.
     members('?active=true')
-      .then(members => {
+      .then((members) => {
         if (members.length === 0) {
           return;
         }
 
-        msg.send(members.map(member => createMention(member.slack)).join(', '));
+        msg.send(
+          members.map((member) => createMention(member.slack)).join(', ')
+        );
       })
-      .catch(error => msg.send(error.message));
+      .catch((error) => msg.send(error.message));
   });
 
-  robot.hear(/@nye/i, msg => {
+  robot.hear(/@nye/i, (msg) => {
     members('?new=true')
-      .then(members => {
+      .then((members) => {
         if (members.length === 0) {
           return;
         }
 
-        msg.send(members.map(member => createMention(member.slack)).join(', '));
+        msg.send(
+          members.map((member) => createMention(member.slack)).join(', ')
+        );
       })
-      .catch(error => msg.send(error.message));
+      .catch((error) => msg.send(error.message));
   });
-  robot.hear(/@wall-of-shame/i, msg => {
-    members('?active=true').then(members => {
+  robot.hear(/@wall-of-shame/i, (msg) => {
+    members('?active=true').then((members) => {
       brus('/')
-        .then(response => {
+        .then((response) => {
           if (response.status !== 200) {
             throw new Error(`Brus is dead (${response.status}).`);
           }
           return response.json();
         })
-        .then(users => {
-          const shamers = _.sortBy(users.filter(user => user.balance < 0), [
-            'balance'
-          ]);
+        .then((users) => {
+          const shamers = _.sortBy(
+            users.filter((user) => user.balance < 0),
+            ['balance']
+          );
 
           const mappedShamers = shamers
-            .map(shamer => [
+            .map((shamer) => [
               shamer,
-              members.find(member => member.brus === shamer.name)
+              members.find((member) => member.brus === shamer.name),
             ])
-            .filter(val => !!val[1]);
+            .filter((val) => !!val[1]);
           msg.send(
             mappedShamers
               .map(
@@ -124,7 +129,7 @@ module.exports = robot => {
               .join(', ')
           );
         })
-        .catch(error => msg.send(error.message));
+        .catch((error) => msg.send(error.message));
     });
   });
 };

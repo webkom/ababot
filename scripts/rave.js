@@ -15,59 +15,59 @@ const logger = require('../lib/log');
 
 function sendCommand(command) {
   payload = {
-    command
+    command,
   };
 
   return openFaas('office-lasers-api', {
     method: 'POST',
-    body: JSON.stringify(payload)
-  }).then(response => {
+    body: JSON.stringify(payload),
+  }).then((response) => {
     return;
   });
 }
 
-module.exports = robot => {
-  robot.respond(/rave off/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/rave off/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('force_power_off').catch(error => send(error.message));
+    sendCommand('force_power_off').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('cry', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/rave on/i, msg => {
+  robot.respond(/rave on/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('force_power_on').catch(error => send(error.message));
+    sendCommand('force_power_on').catch((error) => send(error.message));
 
     const voiceCommand = {
       command: 'say',
       text: 'nu kör vi',
-      voice_name: 'sv'
+      voice_name: 'sv',
     };
     mqttPublish('office_speaker/command', voiceCommand);
     robot.adapter.client.web.reactions.add('middleparrot', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/rave lock/i, msg => {
+  robot.respond(/rave lock/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('power_lock').catch(error => send(error.message));
+    sendCommand('power_lock').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('lock', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/rave unlock/i, msg => {
+  robot.respond(/rave unlock/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('power_unlock').catch(error => send(error.message));
+    sendCommand('power_unlock').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('unlock', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
 };

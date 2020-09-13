@@ -6,8 +6,8 @@
 
 const logger = require('../lib/log');
 
-module.exports = robot => {
-  robot.respond(/tail (.*)?/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/tail (.*)?/i, (msg) => {
     logger.tail(msg);
   });
 };

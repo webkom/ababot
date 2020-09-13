@@ -14,7 +14,7 @@ const openFaas = require('../lib/openfaas');
 const logger = require('../lib/log');
 
 function getKaffeVolume(slackName) {
-  return members(`?slack=${slackName}`).then(body => {
+  return members(`?slack=${slackName}`).then((body) => {
     const user = body[0];
 
     if (!user || !user.kaffe_volume) {
@@ -29,16 +29,16 @@ function sendCommand(command, additional = {}) {
   const payload = { ...additional, command };
   return openFaas('kaffe-pump-api', {
     method: 'POST',
-    body: JSON.stringify(payload)
-  }).then(response => {
+    body: JSON.stringify(payload),
+  }).then((response) => {
     return;
   });
 }
 
 async function startPump(slackName, centiliters, name = 'kaffe', count = 1) {
   return sendCommand('pump_out', {
-    centiliters: centiliters * count
-  }).then(response => {
+    centiliters: centiliters * count,
+  }).then((response) => {
     if (!response.ok) {
       throw new Error(
         `Jeg klarte ikke å pumpe kaffen: HTTP ${response.status}`
@@ -56,25 +56,25 @@ async function startPump(slackName, centiliters, name = 'kaffe', count = 1) {
   });
 }
 
-module.exports = robot => {
-  robot.respond(/pump kaffe/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/pump kaffe/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     const slackName = msg.message.user.name;
     getKaffeVolume(slackName)
-      .then(kaffe_volume => {
+      .then((kaffe_volume) => {
         return startPump(slackName, kaffe_volume);
       })
-      .then(message => {
+      .then((message) => {
         robot.adapter.client.web.reactions.add('coffee', {
           channel: msg.message.room,
-          timestamp: msg.message.id
+          timestamp: msg.message.id,
         });
         send(message);
       })
-      .catch(error => send(error.message));
+      .catch((error) => send(error.message));
   });
-  robot.respond(/pump shot( \d{1,4})?/i, msg => {
+  robot.respond(/pump shot( \d{1,4})?/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     const slackName = msg.message.user.name;
@@ -93,16 +93,16 @@ module.exports = robot => {
       shotCount = parsedCount;
     }
     startPump(slackName, 4, 'shot', shotCount)
-      .then(message => {
+      .then((message) => {
         robot.adapter.client.web.reactions.add('cocktail', {
           channel: msg.message.room,
-          timestamp: msg.message.id
+          timestamp: msg.message.id,
         });
         send(message);
       })
-      .catch(error => send(error.message));
+      .catch((error) => send(error.message));
   });
-  robot.respond(/pump (\d{1,50})/i, msg => {
+  robot.respond(/pump (\d{1,50})/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     const slackName = msg.message.user.name;
@@ -121,13 +121,13 @@ module.exports = robot => {
       parsedCentiliters = 0;
     }
     startPump(slackName, parsedCentiliters, 'ukjent væske')
-      .then(message => {
+      .then((message) => {
         robot.adapter.client.web.reactions.add('baby_bottle', {
           channel: msg.message.room,
-          timestamp: msg.message.id
+          timestamp: msg.message.id,
         });
         send(message);
       })
-      .catch(error => send(error.message));
+      .catch((error) => send(error.message));
   });
 };

@@ -89,15 +89,15 @@ const voices = {
   ur: 'Urdu',
   vi: 'Vietnamese',
   'zh-cn': 'Chinese (Mandarin/China)',
-  'zh-tw': 'Chinese (Mandarin/Taiwan)'
+  'zh-tw': 'Chinese (Mandarin/Taiwan)',
 };
 
-const isVoiceName = voiceName =>
-  Object.keys(voices).find(voice => voice == voiceName) !== undefined;
+const isVoiceName = (voiceName) =>
+  Object.keys(voices).find((voice) => voice == voiceName) !== undefined;
 
 function sendCommand(command, text = null, voiceName = null) {
   let payload = {
-    command
+    command,
   };
   if (voiceName !== null) {
     payload['voice_name'] = voiceName;
@@ -109,16 +109,13 @@ function sendCommand(command, text = null, voiceName = null) {
   mqttPublish('office_speaker/command', payload);
 }
 
-module.exports = robot => {
-  robot.respond(/say (.*)?/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/say (.*)?/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     let text = msg.match[1] && msg.match[1].trim();
 
-    let voiceName = text
-      .split(' ')
-      .splice(-1)[0]
-      .toLowerCase();
+    let voiceName = text.split(' ').splice(-1)[0].toLowerCase();
 
     if (voiceName !== 'random' && !isVoiceName(voiceName)) {
       voiceName = null;
@@ -130,11 +127,11 @@ module.exports = robot => {
     sendCommand('say', text, voiceName);
     robot.adapter.client.web.reactions.add('speaking_head_in_silhouette', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
 
-  robot.respond(/voices/i, msg => {
+  robot.respond(/voices/i, (msg) => {
     logger.log(msg);
     let formattedVoices = '';
     for (key in voices) {

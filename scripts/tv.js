@@ -25,74 +25,74 @@ function sendCommand(command, additional = {}) {
   const payload = { ...additional, command };
   return openFaas('office-chromecast-api', {
     method: 'POST',
-    body: JSON.stringify(payload)
-  }).then(response => {
+    body: JSON.stringify(payload),
+  }).then((response) => {
     return;
   });
 }
 
-module.exports = robot => {
-  robot.respond(/tv pause/i, msg => {
+module.exports = (robot) => {
+  robot.respond(/tv pause/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('pause').catch(error => send(error.message));
+    sendCommand('pause').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('double_vertical_bar', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/tv play/i, msg => {
+  robot.respond(/tv play/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('play').catch(error => send(error.message));
+    sendCommand('play').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('arrow_forward', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/tv mute/i, msg => {
+  robot.respond(/tv mute/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('mute').catch(error => send(error.message));
+    sendCommand('mute').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('mute', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/tv unmute/i, msg => {
+  robot.respond(/tv unmute/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('unmute').catch(error => send(error.message));
+    sendCommand('unmute').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('speaker', {
       channel: msg.message.room,
-      timestamp: msg.message.id
+      timestamp: msg.message.id,
     });
   });
-  robot.respond(/tv next/i, msg => {
+  robot.respond(/tv next/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('next').catch(error => send(error.message));
+    sendCommand('next').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add(
       'black_right_pointing_double_triangle_with_vertical_bar',
       {
         channel: msg.message.room,
-        timestamp: msg.message.id
+        timestamp: msg.message.id,
       }
     );
   });
-  robot.respond(/tv previous/i, msg => {
+  robot.respond(/tv previous/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('previous').catch(error => send(error.message));
+    sendCommand('previous').catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add(
       'black_left_pointing_double_triangle_with_vertical_bar',
       {
         channel: msg.message.room,
-        timestamp: msg.message.id
+        timestamp: msg.message.id,
       }
     );
   });
-  robot.respond(regexUrlCommand, msg => {
+  robot.respond(regexUrlCommand, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     if (msg.match[1] === undefined) {
@@ -112,17 +112,17 @@ module.exports = robot => {
       command = 'youtube';
     }
     sendCommand(command, {
-      url
+      url,
     })
-      .catch(error => send(error.message))
-      .then(_ => {
+      .catch((error) => send(error.message))
+      .then((_) => {
         robot.adapter.client.web.reactions.add('tv', {
           channel: msg.message.room,
-          timestamp: msg.message.id
+          timestamp: msg.message.id,
         });
       });
   });
-  robot.respond(/tv (\d{0,3})/i, msg => {
+  robot.respond(/tv (\d{0,3})/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
     if (msg.match[1] === undefined) {
@@ -140,10 +140,10 @@ module.exports = robot => {
       parsedVolume = 0;
     }
     sendCommand('set_volume', {
-      volume: parsedVolume
+      volume: parsedVolume,
     })
-      .catch(error => send(error.message))
-      .then(_ => {
+      .catch((error) => send(error.message))
+      .then((_) => {
         let emoji = 'speaker';
         if (parsedVolume >= 50) {
           emoji = 'loud_sound';
@@ -152,7 +152,7 @@ module.exports = robot => {
         }
         robot.adapter.client.web.reactions.add(emoji, {
           channel: msg.message.room,
-          timestamp: msg.message.id
+          timestamp: msg.message.id,
         });
       });
   });
