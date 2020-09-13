@@ -1,13 +1,15 @@
-FROM node:10
+FROM node:14
+
 MAINTAINER Abakus Webkom <webkom@abakus.no>
 
 ENV NODE_ENV production
 
-RUN mkdir -p /app
-COPY . /app/
 WORKDIR /app
+COPY package.json ./
+COPY yarn.lock ./
 
 RUN set -e \
   && npm install
 
+COPY bin lib scripts ./
 ENTRYPOINT ["bin/hubot"]
