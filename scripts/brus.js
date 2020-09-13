@@ -98,7 +98,10 @@ function purchaseSoda(slackName, sodaType, count = 1) {
 
 module.exports = robot => {
   Object.keys(sodaMappings).map(sodaKey => {
+    console.log('Mapping thing:', sodaKey, new RegExp(`(-|)(${sodaKey})`));
+
     robot.hear(new RegExp(`(-|)(${sodaKey})`), msg => {
+      console.log('Found match', msg);
       if (msg.message.room === '#brus' || msg.message.room === 'brus') {
         logger.log(msg);
         const send = msg.send.bind(msg);
@@ -108,6 +111,17 @@ module.exports = robot => {
         );
       }
     });
+  });
+  robot.hear(/:dahls:/, msg => {
+    console.log('Found match', msg);
+    if (msg.message.room === '#brus' || msg.message.room === 'brus') {
+      logger.log(msg);
+      const send = msg.send.bind(msg);
+      const isMinus = false;
+      purchaseSoda(msg.message.user.name, sodaKey, isMinus ? -1 : 1).catch(
+        error => send(error.message)
+      );
+    }
   });
 
   robot.respond(/kjøp (.*)?/i, msg => {
