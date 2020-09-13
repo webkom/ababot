@@ -17,7 +17,7 @@
     "hubot-help": "1.0.1",
     "hubot-redis-brain": "1.0.0",
     "hubot-slack": "4.7.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.19",
     "moment": "2.24.0",
     "mqtt": "3.0.0",
     "node-fetch": "^2.6.1",
