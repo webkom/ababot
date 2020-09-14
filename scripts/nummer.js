@@ -44,15 +44,8 @@ module.exports = (robot) => {
           if (res.phone_number == '') {
             msg.send(`Fant bruker ${res.name}, men de har ikke noe nummer`);
           } else {
-            msg.send(
-              `*${res.name}*:${'\t'} ${res.phone_number.substr(
-                0,
-                3
-              )} ${res.phone_number
-                .substr(3)
-                .match(/.{1,2}/g)
-                .join(' ')}`
-            );
+            msg.send(`Fant bruker ved navn: *${res.name}*, nummer:`);
+            msg.send(`${res.phone_number}`);
           }
         });
       })
