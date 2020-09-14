@@ -32,6 +32,14 @@ module.exports = (robot) => {
         const searchName = msg.message.text.split(' ')[2];
 
         if (!searchName) {
+          msg.send('400 BAD REQUEST: \n No keyword detected');
+          return;
+        }
+
+        if (searchName.length < 3) {
+          msg.send(
+            '451 UNAVAILABLE FOR LEGAL REASONS: \n Keyword to short, too many results'
+          );
           return;
         }
 
