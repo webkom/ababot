@@ -21,13 +21,11 @@ module.exports = (robot) => {
           return;
         }
 
-        const searcher = new FuzzySearch(members, [
-          'name',
-          'full_name',
-          'slack',
-          'github',
-          'brus',
-        ]);
+        const searcher = new FuzzySearch(
+          members,
+          ['name', 'full_name', 'slack', 'github', 'brus'],
+          { sort: true }
+        );
 
         const searchName = msg.message.text.split(' ')[2];
 
