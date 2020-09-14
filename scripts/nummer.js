@@ -41,14 +41,14 @@ module.exports = (robot) => {
         }
 
         results.forEach((res) => {
-          if (user.phone_number == '') {
-            msg.send(`Fant bruker ${user.name}, men de har ikke noe nummer`);
+          if (res.phone_number == '') {
+            msg.send(`Fant bruker ${res.name}, men de har ikke noe nummer`);
           } else {
             msg.send(
-              `*${user.name}*:${'\t'} ${user.phone_number.substr(
+              `*${res.name}*:${'\t'} ${res.phone_number.substr(
                 0,
                 3
-              )} ${user.phone_number
+              )} ${res.phone_number
                 .substr(3)
                 .match(/.{1,2}/g)
                 .join(' ')}`
