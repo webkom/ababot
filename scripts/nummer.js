@@ -22,6 +22,7 @@ module.exports = (robot) => {
 
         const searcher = new FuzzySearch(members, [
           'name',
+          'full_name',
           'slack',
           'github',
           'brus',
@@ -30,31 +31,30 @@ module.exports = (robot) => {
         const searchName = msg.message.text.split(' ')[2];
 
         if (!searchName) {
-          msg.send('Fant ikke noe navn og søke på');
           return;
         }
 
-        const user = searcher.search(searchName)[0];
-
-        if (!user) {
-          msg.send(`Fant ikke medlem ${msg.message} :(`);
+        const results = searcher.search(searchName);
+        if (results.length == 0) {
+          msg.send(`Fant ingen medlemmer ved søket: ${searchName}`);
           return;
         }
 
-        if (user.phone_number == '') {
-          msg.send(`Fant bruker ${user.name}, men de har ikke noe nummer`);
-          return;
-        }
-
-        msg.send(
-          `*${user.name}*:${'\t'} ${user.phone_number.substr(
-            0,
-            3
-          )} ${user.phone_number
-            .substr(3)
-            .match(/.{1,2}/g)
-            .join(' ')}`
-        );
+        results.forEach((res) => {
+          if (user.phone_number == '') {
+            msg.send(`Fant bruker ${user.name}, men de har ikke noe nummer`);
+          } else {
+            msg.send(
+              `*${user.name}*:${'\t'} ${user.phone_number.substr(
+                0,
+                3
+              )} ${user.phone_number
+                .substr(3)
+                .match(/.{1,2}/g)
+                .join(' ')}`
+            );
+          }
+        });
       })
       .catch((error) => msg.send(error.message));
   });
