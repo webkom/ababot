@@ -2,7 +2,6 @@
 //   Display the numbers of the active pool
 //
 // Commands
-//   hubot numbers - Reply with name/number of all active members
 //   hubot number [name] - Reply with name/number any members in members
 
 const _ = require('lodash');
@@ -16,7 +15,9 @@ module.exports = (robot) => {
     members()
       .then((members) => {
         if (members.length === 0) {
-          msg.send('Noe er feil med members, fant ingen medlemmer');
+          msg.send(
+            '503 SERVICE UNAVAILABLE: \n Something is wrong with the MemebersAPI'
+          );
           return;
         }
 
@@ -36,45 +37,23 @@ module.exports = (robot) => {
 
         const results = searcher.search(searchName);
         if (results.length == 0) {
-          msg.send(`Fant ingen medlemmer ved søket: ${searchName}`);
+          msg.send(
+            `404 NOT FOUND. \n Found no match for the keyword: ${searchName}`
+          );
           return;
         }
 
         results.forEach((res) => {
           if (res.phone_number == '') {
-            msg.send(`Fant bruker ${res.name}, men de har ikke noe nummer`);
+            msg.send(
+              `410 GONE. \n Found user: ${res.name}, but they have no number`
+            );
           } else {
             msg.send(
-              `Fant bruker ved navn: *${res.name}*: <tel:${res.phone_number}|${res.phone_number}>`
+              `200 OK \n Name: *${res.name}* <tel:${res.phone_number}|${res.phone_number}>`
             );
           }
         });
-      })
-      .catch((error) => msg.send(error.message));
-  });
-
-  robot.respond(/numbers/i, (msg) => {
-    logger.log(msg);
-    members('?active=true')
-      .then((members) => {
-        if (members.length === 0) {
-          return;
-        }
-        msg.send(
-          members
-            .map(
-              (m) =>
-                `*${m.name}*:${'\t'} ${m.phone_number.substr(
-                  0,
-                  3
-                )} ${m.phone_number
-                  .substr(3)
-                  .match(/.{1,2}/g)
-                  .join(' ')}`
-            )
-            .sort()
-            .join('\n')
-        );
       })
       .catch((error) => msg.send(error.message));
   });
