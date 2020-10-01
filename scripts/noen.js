@@ -142,12 +142,12 @@ module.exports = (robot) => {
           return response.json();
         })
         .then((users) => {
-          const famers = _.sortBy(users, ['balance']).slice(0, 3);
+          const famers = _.sortBy(users, ['balance']).reverse().slice(0, 3);
 
           const mappedFamers = famers
             .map((famer) => [
               famer,
-              members.find((member) => member.brus === shamer.name),
+              members.find((member) => member.brus === famer.name),
             ])
             .filter((val) => !!val[1]);
           msg.send(
