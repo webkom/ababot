@@ -132,4 +132,34 @@ module.exports = (robot) => {
         .catch((error) => msg.send(error.message));
     });
   });
+  robot.hear(/@hall-of-fame/i, (msg) => {
+    members('?active=true').then((members) => {
+      brus('/')
+        .then((response) => {
+          if (response.status !== 200) {
+            throw new Error(`Brus is dead (${response.status}).`);
+          }
+          return response.json();
+        })
+        .then((users) => {
+          const famers = _.sortBy(users, ['balance']).slice(0, 3);
+
+          const mappedFamers = famers
+            .map((famer) => [
+              famer,
+              members.find((member) => member.brus === shamer.name),
+            ])
+            .filter((val) => !!val[1]);
+          msg.send(
+            mappedFamers
+              .map(
+                ([brus, member]) =>
+                  `${createMention(member.slack)} (${brus.balance})`
+              )
+              .join(', ')
+          );
+        })
+        .catch((error) => msg.send(error.message));
+    });
+  });
 };
