@@ -11,9 +11,9 @@ const logger = require('../lib/log');
 const defaultReaction = 'x';
 
 const createPoll = (message, reactionPool) => {
-  const [name, ...options] = (
-    message.match(/(\".+?\")|(\n.+)/g) || []
-  ).map((string) => string.replace(/\"|\n/g, ''));
+  const [name, ...options] = (message.match(/(\".+?\")|(\n.+)/g) || []).map(
+    (string) => string.replace(/\"|\n/g, '')
+  );
   return {
     name,
     options: options.map((option) => ({

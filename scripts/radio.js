@@ -72,8 +72,7 @@ const stations = [
   {
     id: 'energi',
     name: 'Energi',
-    url:
-      'https://nrj.p4groupaudio.com/NRJ_MH?args=web_01&referrer=13&station=13&codec=mp3&quality=high&distributor=p4',
+    url: 'https://nrj.p4groupaudio.com/NRJ_MH?args=web_01&referrer=13&station=13&codec=mp3&quality=high&distributor=p4',
     contentType: 'audio/mp3',
   },
   {
