@@ -99,6 +99,21 @@ module.exports = (robot) => {
       })
       .catch((error) => msg.send(error.message));
   });
+
+  robot.hear(/@gamle/i, (msg) => {
+    members('?active=false')
+      .then((members) => {
+        if (members.length === 0) {
+          return;
+        }
+
+        msg.send(
+          members.map((member) => createMention(member.slack)).join(', ')
+        );
+      })
+      .catch((error) => msg.send(error.message));
+  });
+
   robot.hear(/@wall-of-shame/i, (msg) => {
     members('?active=true').then((members) => {
       brus('/')
