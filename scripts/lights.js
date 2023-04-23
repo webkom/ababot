@@ -13,13 +13,15 @@ const fetch = require('node-fetch');
 const openFaas = require('../lib/openfaas');
 const logger = require('../lib/log');
 
-function sendCommand(command) {
+function sendCommand(command, light = '') {
   payload = {
     command,
+    light,
   };
 
   return openFaas('office-lights-api', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   }).then((response) => {
     return;
@@ -27,37 +29,41 @@ function sendCommand(command) {
 }
 
 module.exports = (robot) => {
-  robot.respond(/lights off/i, (msg) => {
+  robot.respond(/lights off( .+)?/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('force_power_off').catch((error) => send(error.message));
+    const light = msg.match[1] ? msg.match[1].trim() : '';
+    sendCommand('force_power_off', light).catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('mobile_phone_off', {
       channel: msg.message.room,
       timestamp: msg.message.id,
     });
   });
-  robot.respond(/lights on/i, (msg) => {
+  robot.respond(/lights on( .+)?/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('force_power_on').catch((error) => send(error.message));
+    const light = msg.match[1] ? msg.match[1].trim() : '';
+    sendCommand('force_power_on', light).catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('bulb', {
       channel: msg.message.room,
       timestamp: msg.message.id,
     });
   });
-  robot.respond(/lights lock/i, (msg) => {
+  robot.respond(/lights lock( .+)?/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('power_lock').catch((error) => send(error.message));
+    const light = msg.match[1] ? msg.match[1].trim() : '';
+    sendCommand('power_lock', light).catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('lock', {
       channel: msg.message.room,
       timestamp: msg.message.id,
     });
   });
-  robot.respond(/lights unlock/i, (msg) => {
+  robot.respond(/lights unlock( .+)?/i, (msg) => {
     logger.log(msg);
     const send = msg.send.bind(msg);
-    sendCommand('power_unlock').catch((error) => send(error.message));
+    const light = msg.match[1] ? msg.match[1].trim() : '';
+    sendCommand('power_unlock', light).catch((error) => send(error.message));
     robot.adapter.client.web.reactions.add('unlock', {
       channel: msg.message.room,
       timestamp: msg.message.id,
