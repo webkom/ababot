@@ -1,20 +1,18 @@
 {
-  "name": "testbot",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "commonjs",
+  "name": "slack-bot-example",
+  "version": "0.1.0",
+  "description": "",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node index.js"
+    "start": "npx tsx index.ts"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "@slack/bolt": "^4.0.1"
+    "@slack/bolt": "^3.10.0"
   },
   "devDependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "tsx": "^4.19.2"
   }
 }
