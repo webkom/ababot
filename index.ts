@@ -1,7 +1,6 @@
 import { App } from "@slack/bolt";
 import dotenv from "dotenv";
 import { Command, COMMANDS } from "./src/commands";
-import { listMembers } from "./src/commands/members";
 dotenv.config();
 
 const app = new App({
@@ -24,7 +23,7 @@ Object.keys(COMMANDS).forEach((key) => {
   const c = COMMANDS[key];
   if (isSlashCommand(c)) {
     app.command(`${c.name}`, async (context) => {
-      c.fn(context, c, c.options);
+      c.fn(context, c, c.allowedOptions);
     });
   }
 });
