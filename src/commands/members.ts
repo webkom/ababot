@@ -1,7 +1,12 @@
 import { SlackCommandMiddlewareArgs } from "@slack/bolt";
 import { Command } from "../commands";
+import {
+  fetchMembers,
+  formatMemberAsSlackBlocks,
+  formatSeveralMembersAsSlackBlocks,
+} from "../utils";
 
-interface Member {
+export interface Member {
   name: string;
   full_name: string;
   birthday: string;
@@ -29,60 +34,13 @@ interface Member {
   authorized_keys: string[];
 }
 
-const fetchMembers = async () => {
-  const response = await fetch("https://members.webkom.dev", {
-    headers: {
-      Authorization: `Basic ${btoa(
-        process.env.MEMBERS_LOGIN_USERNAME +
-          ":" +
-          process.env.MEMBERS_LOGIN_PASSWORD
-      )}`,
-      Accept: "application/json",
-    },
-  });
-  const members: Member[] = await response.json();
-
-  if (!members) {
-    return [];
-  }
-  return members;
-};
-
-const formatMember = (member: Member, options?: string[]) => {
-  let memberString = `
-  --------------------------------
-  Full name: ${member.full_name}
-  Birthday: ${member.birthday}
-  Joined: ${member.joined}
-  First lego commit: ${member.first_lego_commit}
-  Slack: ${member.slack}
-  Phone number: ${member.phone_number}
-  Github: ${member.github}
-  Duolingo: ${member.duolingo}
-  Brus: ${member.brus}
-  Active: ${member.active}
-  --------------------------------`;
-  if (options && options.length > 0) {
-    if (options.includes("--active") && !member.active) {
-      return null;
-    }
-    memberString = `-------------------------------- 
-    Full name: ${member.full_name} ${
-      options.includes("--birthday") ? `Birthday: ${member.birthday}` : ""
-    } ${options.includes("--joined") ? `Joined: ${member.joined}` : ""} ${
-      options.includes("--first-lego-commit")
-        ? `First lego commit: ${member.first_lego_commit}`
-        : ""
-    } ${options.includes("--slack") ? `Slack: ${member.slack}` : ""} ${
-      options.includes("--phone-number")
-        ? `Phone number: ${member.phone_number}`
-        : ""
-    } ${options.includes("--github") ? `Github: ${member.github}` : ""} ${
-      options.includes("--duolingo") ? `Duolingo: ${member.duolingo}` : ""
-    } ${options.includes("--brus") ? `Brus: ${member.brus}` : ""}
-    --------------------------------`;
-  }
-  return memberString.replace(/  +/g, " ");
+const filterMembersWithBooleanProperty = (
+  members: Member[],
+  property: string
+): Member[] => {
+  const bool = !property.startsWith("not-");
+  property = property.replace("not-", "");
+  return members.filter((m) => m[property] == bool);
 };
 
 export const listMembers = async (
@@ -92,38 +50,68 @@ export const listMembers = async (
 ) => {
   const { ack, respond } = context;
   await ack();
-  const members = await fetchMembers();
-  if (!members) {
-    await respond("Something went wrong");
-    return;
+
+  let members = await fetchMembers();
+
+  if (options) {
+    for (const option of options) {
+      members = filterMembersWithBooleanProperty(members, option);
+      context.command.text = context.command.text.replace(option, "");
+    }
   }
 
-  await respond(members.map((m) => formatMember(m, options)).join("\n"));
+  const blocks = formatSeveralMembersAsSlackBlocks(members);
+  for (const block of blocks) {
+    await respond(block);
+  }
 };
 
 export const getMemberInfo = async (
   context: SlackCommandMiddlewareArgs,
   commandObject: Command,
-  options?: string[]
+  options?: string[],
+  extraText?: string
 ) => {
   const { ack, respond } = context;
-  const memberName = context.command.text
-    .replace(commandObject?.name, "")
-    .split(" ")[0];
+  await ack();
 
-  const member = await fetchMembers().then((members) => {
-    return members.find((m) => m.name.includes(memberName));
-  });
-
-  if (!member) {
-    await respond("Something went wrong");
+  const memberName = extraText;
+  if (!memberName) {
+    await respond("Please provide a member name");
     return;
   }
+  let members = await fetchMembers();
 
-  const formattedMember = formatMember(member, options);
-  if (formattedMember) {
-    await respond(formattedMember);
-  } else {
-    await respond("Member not found or inactive.");
+  if (options) {
+    for (const option of options) {
+      members = filterMembersWithBooleanProperty(members, option);
+      context.command.text = context.command.text.replace(option, "");
+    }
   }
+
+  if (memberName) {
+    members = members.filter(
+      (m) => matchesAnyProperty(m, memberName) || m.name === memberName
+    );
+    if (members.length === 0) {
+      await respond(
+        `Could not find member with name:  + ${memberName} and options ${options}`
+      );
+      return;
+    }
+  }
+
+  for (const member of members) {
+    await respond(formatMemberAsSlackBlocks(member));
+  }
+  return;
+};
+
+const matchesAnyProperty = (member: Member, name: string) => {
+  name = name.toLowerCase();
+  return (
+    member.name.toLowerCase() === name ||
+    member.full_name.toLowerCase() === name ||
+    member.slack.toLowerCase() === name.replace("@", "")
+  );
 };

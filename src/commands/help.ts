@@ -1,5 +1,26 @@
 import { SlackCommandMiddlewareArgs } from "@slack/bolt";
-import { Command, COMMANDS, getCommand } from "../commands";
+import { Command, COMMANDS, getCommandFromListOfCommands } from "../commands";
+const getHelpText = async (
+  command: Command,
+  includeOptions = false,
+  includeSubCommands = false
+) => {
+  let helpText = `Usage: ${command.usage}\n`;
+  helpText += `Description: ${command.description}\n`;
+  if (includeSubCommands && command.subcommands) {
+    helpText += "Subcommands:\n";
+    command.subcommands.forEach(async (subCommand) => {
+      helpText += `\t${subCommand.usage}: ${subCommand.description}\n`;
+      if (includeOptions && subCommand.allowedOptions) {
+        helpText += `Options: ${subCommand.allowedOptions.join(", ")}\n`;
+      }
+    });
+  }
+  if (command.allowedOptions && includeOptions) {
+    helpText += `Options: ${command.allowedOptions.join(", ")}\n`;
+  }
+  return helpText;
+};
 
 export const respondWithHelp = async ({
   command,
@@ -8,37 +29,17 @@ export const respondWithHelp = async ({
 }: SlackCommandMiddlewareArgs) => {
   await ack();
 
-  const getHelpText = async (
-    command: Command,
-    includeOptions = false,
-    includeSubCommands = false
-  ) => {
-    let helpText = `Usage: ${command.usage}\n`;
-    helpText += `Description: ${command.description}\n`;
-    if (command.subcommands && includeSubCommands) {
-      helpText += "Subcommands:\n";
-      command.subcommands.forEach(async (subCommand) => {
-        helpText += `\t${subCommand.usage}: ${subCommand.description}\n`;
-      });
-    }
-    if (command.options && includeOptions) {
-      helpText += `Options: ${command.options.join(", ")}\n`;
-    }
-    return helpText;
-  };
-
-  const foundCommand = getCommand(command.command);
+  const foundCommand = getCommandFromListOfCommands(command.command);
   if (!foundCommand) {
     await respond("Command not found, type /help for a list of commands");
     return;
   }
   let helpText = "";
 
-  console.log("command", command);
   const isHelpCommand = command.command === COMMANDS["help"].name;
 
   if (isHelpCommand) {
-    const mainCommand = getCommand(command.text);
+    const mainCommand = getCommandFromListOfCommands(command.text);
     if (mainCommand) {
       helpText = await getHelpText(mainCommand, true, true);
     } else {
@@ -48,7 +49,7 @@ export const respondWithHelp = async ({
           return;
         }
         const c = COMMANDS[key];
-        helpText += getHelpText(c);
+        helpText += await getHelpText(c, true);
       });
     }
   } else {
