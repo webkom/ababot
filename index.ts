@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { Command, COMMANDS } from "./src/commands";
 dotenv.config();
 
-const app = new App({
+export const hubot = new App({
   token: process.env.BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   socketMode: true,
@@ -11,7 +11,7 @@ const app = new App({
 });
 
 (async () => {
-  await app.start(process.env.PORT || 3000);
+  await hubot.start(process.env.PORT || 3000);
   console.log("⚡️ Bolt app is running!");
 })();
 
@@ -22,7 +22,7 @@ const isSlashCommand = (command: Command) => {
 Object.keys(COMMANDS).forEach((key) => {
   const c = COMMANDS[key];
   if (isSlashCommand(c)) {
-    app.command(`${c.name}`, async (context) => {
+    hubot.command(`${c.name}`, async (context) => {
       c.fn(context, c, c.allowedOptions);
     });
   }
