@@ -7,12 +7,11 @@ export const hubot = new App({
   token: process.env.BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   appToken: process.env.APP_TOKEN,
-  logLevel: LogLevel.DEBUG,
   socketMode: true,
 });
 
 (async () => {
-  await hubot.start(process.env.PORT || 3000);
+  await hubot.start();
   console.log("⚡️ Bolt app is running!");
 })();
 
