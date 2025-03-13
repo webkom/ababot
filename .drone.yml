@@ -9,8 +9,8 @@ steps:
     when:
       branch:
         - master
-      event: push
-      status: success
+      event: [push]
+      status: [success]
     settings:
       registry: https://registry.webkom.dev
       repo: registry.webkom.dev/webkom/ababot
